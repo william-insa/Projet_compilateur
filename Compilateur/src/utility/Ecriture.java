@@ -1,4 +1,4 @@
-package machine;
+package utility;
 
 import java.io.*;
 
