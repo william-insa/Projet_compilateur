@@ -1,19 +1,18 @@
 package utility;
 
-import java.io.IOException;
 import java.io.OutputStream;
 
 public class YVMasm implements YVM {
-	
-	private OutputStream  file;
+
+	private OutputStream file;
 	private int comptString;
-	
+
 	public YVMasm(String nom) {
 		super();
-		file = Ecriture.ouvrir(nom+".asm");
+		file = Ecriture.ouvrir(nom + ".asm");
 		this.comptString = 0;
 	}
-	
+
     public void entete(){
 		
 	    Ecriture.ecrireStringln (file,";entete ");
@@ -111,134 +110,125 @@ public class YVMasm implements YVM {
 	}
 
 	public void iinf() {
-		Ecriture.ecrireStringln(file,  ";iinf");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,bx");
-		Ecriture.ecrireStringln(file,  "jge $+6");
-		Ecriture.ecrireStringln(file,  "push -1");
-		Ecriture.ecrireStringln(file,  "jmp $+4");
-		Ecriture.ecrireStringln(file,  "push 0");
-		
+		Ecriture.ecrireStringln(file, ";iinf");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,bx");
+		Ecriture.ecrireStringln(file, "jge $+6");
+		Ecriture.ecrireStringln(file, "push -1");
+		Ecriture.ecrireStringln(file, "jmp $+4");
+		Ecriture.ecrireStringln(file, "push 0");
 	}
 
 	public void ineg() {
-		Ecriture.ecrireStringln(file,  ";ineg");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "push dx");
-		Ecriture.ecrireStringln(file,  "mov dx,-1");
-		Ecriture.ecrireStringln(file,  "mul dx");
-		Ecriture.ecrireStringln(file,  "pop dx");
-		Ecriture.ecrireStringln(file,  "push ax");
-		
+		Ecriture.ecrireStringln(file, ";ineg");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "push dx");
+		Ecriture.ecrireStringln(file, "mov dx,-1");
+		Ecriture.ecrireStringln(file, "mul dx");
+		Ecriture.ecrireStringln(file, "pop dx");
+		Ecriture.ecrireStringln(file, "push ax");
 	}
 
 	public void inot() {
-		Ecriture.ecrireStringln(file,  ";inot");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "not ax");
-		Ecriture.ecrireStringln(file,  "push ax");
-		
+		Ecriture.ecrireStringln(file, ";inot");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "not ax");
+		Ecriture.ecrireStringln(file, "push ax");
 	}
 
 	public void isup() {
-		Ecriture.ecrireStringln(file,  ";isup");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,bx");
-		Ecriture.ecrireStringln(file,  "jle $+6");
-		Ecriture.ecrireStringln(file,  "push -1");
-		Ecriture.ecrireStringln(file,  "jmp $+4");
-		Ecriture.ecrireStringln(file,  "push 0");
-		
+		Ecriture.ecrireStringln(file, ";isup");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,bx");
+		Ecriture.ecrireStringln(file, "jle $+6");
+		Ecriture.ecrireStringln(file, "push -1");
+		Ecriture.ecrireStringln(file, "jmp $+4");
+		Ecriture.ecrireStringln(file, "push 0");
 	}
 
 	public void isupegal() {
-		Ecriture.ecrireStringln(file,  ";isupegal");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,bx");
-		Ecriture.ecrireStringln(file,  "jl $+6");
-		Ecriture.ecrireStringln(file,  "push -1");
-		Ecriture.ecrireStringln(file,  "jmp $+4");
-		Ecriture.ecrireStringln(file,  "push 0");
-		
+		Ecriture.ecrireStringln(file, ";isupegal");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,bx");
+		Ecriture.ecrireStringln(file, "jl $+6");
+		Ecriture.ecrireStringln(file, "push -1");
+		Ecriture.ecrireStringln(file, "jmp $+4");
+		Ecriture.ecrireStringln(file, "push 0");
 	}
 
 	public void iegal() {
-		Ecriture.ecrireStringln(file,  ";iegal");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,bx");
-		Ecriture.ecrireStringln(file,  "jne $+6");
-		Ecriture.ecrireStringln(file,  "push -1");
-		Ecriture.ecrireStringln(file,  "jmp $+4");
-		Ecriture.ecrireStringln(file,  "push 0");
-		
+		Ecriture.ecrireStringln(file, ";iegal");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,bx");
+		Ecriture.ecrireStringln(file, "jne $+6");
+		Ecriture.ecrireStringln(file, "push -1");
+		Ecriture.ecrireStringln(file, "jmp $+4");
+		Ecriture.ecrireStringln(file, "push 0");
 	}
-	
+
 	public void ifeq(String etiq) {
-		Ecriture.ecrireStringln(file,  ";ifeq " + etiq);
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,0");
-		Ecriture.ecrireStringln(file,  "je " + etiq);
+		Ecriture.ecrireStringln(file, ";ifeq " + etiq);
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,0");
+		Ecriture.ecrireStringln(file, "je " + etiq);
 	}
 
 	public void idiff() {
-		Ecriture.ecrireStringln(file,  ";idiff");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "cmp ax,bx");
-		Ecriture.ecrireStringln(file,  "je $+6");
-		Ecriture.ecrireStringln(file,  "push -1");
-		Ecriture.ecrireStringln(file,  "jmp $+4");
-		Ecriture.ecrireStringln(file,  "push 0");
-		
+		Ecriture.ecrireStringln(file, ";idiff");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,bx");
+		Ecriture.ecrireStringln(file, "je $+6");
+		Ecriture.ecrireStringln(file, "push -1");
+		Ecriture.ecrireStringln(file, "jmp $+4");
+		Ecriture.ecrireStringln(file, "push 0");
 	}
-	
+
 	public void iand() {
-		Ecriture.ecrireStringln(file,  ";and");
-		Ecriture.ecrireStringln(file,  "pop bx");
-		Ecriture.ecrireStringln(file,  "pop ax");
-		Ecriture.ecrireStringln(file,  "and ax,bx");
-		Ecriture.ecrireStringln(file,  "push ax");
+		Ecriture.ecrireStringln(file, ";and");
+		Ecriture.ecrireStringln(file, "pop bx");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "and ax,bx");
+		Ecriture.ecrireStringln(file, "push ax");
 	}
 
 	public void Goto(String etiq) {
-		Ecriture.ecrireStringln(file,  ";goto " + etiq);
-		Ecriture.ecrireStringln(file,  "jmp " + etiq);
+		Ecriture.ecrireStringln(file, ";goto " + etiq);
+		Ecriture.ecrireStringln(file, "jmp " + etiq);
 	}
-	
+
 	public void aLaLigne() {
-		Ecriture.ecrireStringln(file,  ";aLaLigne");
-		Ecriture.ecrireStringln(file,  "call ligsuiv");
+		Ecriture.ecrireStringln(file, ";aLaLigne");
+		Ecriture.ecrireStringln(file, "call ligsuiv");
 	}
-	
+
 	public void lireEnt(int x) {
-		Ecriture.ecrireStringln(file,  ";lireEnt " + x);
-		Ecriture.ecrireStringln(file,  "lea dx,[bp" + x + "]");
-		Ecriture.ecrireStringln(file,  "push dx");
-		Ecriture.ecrireStringln(file,  "call lirent");
-
+		Ecriture.ecrireStringln(file, ";lireEnt " + x);
+		Ecriture.ecrireStringln(file, "lea dx,[bp" + x + "]");
+		Ecriture.ecrireStringln(file, "push dx");
+		Ecriture.ecrireStringln(file, "call lirent");
 	}
-	
+
 	public void ecrireChaine(String x) {
-		Ecriture.ecrireStringln(file,  ";ecrireChaine " + x);
-		Ecriture.ecrireStringln(file, ".DATA\n\tmess" + this.comptString + " DB \"" + x + "$\""); 
-		Ecriture.ecrireStringln(file, ".CODE\n\tlea dx,mess" + this.comptString + "\n\tpush dx\n\tcall ecrch");
-		this.comptString++;					
+		Ecriture.ecrireStringln(file, ";ecrireChaine " + x);
+		Ecriture.ecrireStringln(file, ".DATA\n\tmess" + this.comptString
+				+ " DB \"" + x + "$\"");
+		Ecriture.ecrireStringln(file, ".CODE\n\tlea dx,mess" + this.comptString
+				+ "\n\tpush dx\n\tcall ecrch");
+		this.comptString++;
+	}
 
-	}
-	
 	public void ecrireEnt() {
-		Ecriture.ecrireStringln(file,  ";ecrireEnt");
-		Ecriture.ecrireStringln(file,"call ecrent");
-	
+		Ecriture.ecrireStringln(file, ";ecrireEnt");
+		Ecriture.ecrireStringln(file, "call ecrent");
 	}
-	
+
 	public void ecrireBool() {
-		Ecriture.ecrireStringln(file,  ";ecrireBool");
-		Ecriture.ecrireStringln(file,  "call ecrbool");
+		Ecriture.ecrireStringln(file, ";ecrireBool");
+		Ecriture.ecrireStringln(file, "call ecrbool");
 	}
-	
 }

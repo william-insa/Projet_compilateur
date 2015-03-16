@@ -1,6 +1,6 @@
 package utility;
 
-public class IdentPasPresentException extends Exception{
+public class IdentPasPresentException extends Exception {
 	/**
 	 * 
 	 */
