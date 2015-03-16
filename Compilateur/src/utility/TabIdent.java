@@ -21,7 +21,7 @@ public class TabIdent {
 		return this.table.containsKey(_clef);
 	}
 
-	public void rangeIdent(String _clef, Ident _ident){
+	public void rangeIdent(String _clef, Ident _ident) {
 		if (!existeIdent(_clef)) {
 			this.table.put(_clef, _ident);
 		}
