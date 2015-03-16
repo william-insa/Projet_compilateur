@@ -34,21 +34,10 @@ public class Expression {
 			throw new IdentPasPresentException();
 	}
 	
-	public void empiler (String _op) {this.pileOperateur.add(_op);
+	public void empilerOPREL (String _op) {
+		this.pileOperateur.add(_op);
 		
 		switch(_op) {
-		case "+":
-			yvm.iadd();
-			break;
-		case "-":
-			yvm.isub();
-			break;
-		case "/":
-			yvm.idiv();
-			break;
-		case "*":
-			yvm.imul();
-			break;
 		case "<":
 			yvm.iinf();
 			break;
@@ -61,12 +50,7 @@ public class Expression {
 		case ">=":
 			yvm.isupegal();
 			break;
-		case "OU":
-			yvm.ior();
-			break;
-		case "ET":
-			yvm.iand();
-			break;
+		
 		case "NON":
 			yvm.inot();
 			break;
@@ -74,9 +58,45 @@ public class Expression {
 	
 	}
 	
-	public void empilerINEG(String _op) {
+	public void empilerOPADD(String _op) {
 		this.pileOperateur.add(_op);
-		yvm.ineg();
+		switch(_op) {
+		case "OU":
+			yvm.ior();
+			break;
+		case "+":
+			yvm.iadd();
+			break;
+		case "-":
+			yvm.isub();
+			break;
+		}
+	}
+	
+	public void empilerOPMULT(String _op) {
+		this.pileOperateur.add(_op);
+		switch(_op) {
+		case "ET":
+			yvm.iand();
+			break;
+		case "/":
+			yvm.idiv();
+			break;
+		case "*":
+			yvm.imul();
+			break;
+		}
+	}
+	public void empilerOPNEG(String _op) {
+		this.pileOperateur.add(_op);
+		switch(_op) {
+		case "NON":
+			yvm.inot();
+			break;
+		case "-":
+			yvm.ineg();
+			break;
+		}
 	}
 	
 	public boolean calcul(String ope) { return ope.equals("+") || ope.equals("-") || ope.equals("/") || ope.equals("*"); }
