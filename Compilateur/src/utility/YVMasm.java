@@ -35,7 +35,7 @@ public class YVMasm implements YVM {
 	
 	public void iconst(int valeur){
 		Ecriture.ecrireStringln (file,";iconst " + valeur);	
-	    Ecriture.ecrireStringln (file,"push " + 10);
+	    Ecriture.ecrireStringln (file,"push " + valeur);
 	}
 	
 	public void idiv(){

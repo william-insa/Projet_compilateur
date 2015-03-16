@@ -73,7 +73,7 @@ public class Expression {
 		}
 	}
 	
-	public void empilerOPMULT(String _op) {
+	public void empilerOPMUL(String _op) {
 		this.pileOperateur.add(_op);
 		switch(_op) {
 		case "ET":

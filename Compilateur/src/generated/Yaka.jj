@@ -181,17 +181,17 @@ void valConst() : {}{
 
 void declVar() : {}
 {
-  <VAR> type()	
-  <ident>		
+  <VAR> type(){int type = 0; if (YakaTokenManger.chaineLue == "BOOLEEN")  {type = 1;}}
+  <ident>		{declaration.declvar(YakaTokenManager.identLu, type);}
   ("," 
-      <ident>  
+      <ident>  {declaration.declvar(YakaTokenManager.identLu, type);}
   )* ";"
 	
 }
 
 void type() :{}
 {
-   <ENTIER> 			
+   <ENTIER> 
  | <BOOLEEN>	
 }
 /*
@@ -251,31 +251,31 @@ void valeur () : {}
 
 void opRel() : {}
 {
-   "=" 		
- | "<>" 	
- | "<" 		
- | "<=" 	
- | ">" 		
- | ">=" 	
+   "=" {expression.empilerOPREL("=");}
+ | "<>" 	{expression.empilerOPREL("<>");}
+ | "<" 		{expression.empilerOPREL("<");}
+ | "<=" 	{expression.empilerOPREL("<=");}
+ | ">" 		{expression.empilerOPREL(">");}
+ | ">=" 	{expression.empilerOPREL(">=");}
 } 
 
 void opAdd() : {}
 {
-    "+"		
-  |  "-"  
-  | <OU> 	
+    "+"		{expression.empilerOPADD("+");}
+  |  "-"  {expression.empilerOPADD("-");}
+  | <OU> 	{expression.empilerOPADD("OU");}
 }
 
 void opMul() : {}
 {
-  "*"		
-  | "/"		
-  | <ET>	
+  "*"		{expression.empilerOPMUL("*");}
+  | "/"		{expression.empilerOPMUL("/");}
+  | <ET>	{expression.empilerOPMUL("ET");}
 } 
 
 void opNeg() : {}
-{ "-" 		
- | <NON>	
+{ "-" 		{expression.empilerOPNEG("-");}
+ | <NON>	{expression.empilerOPNEG("NON");}
 }
 
 

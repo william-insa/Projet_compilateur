@@ -4,6 +4,8 @@ import generated.*;
 
 
 public class Declaration {
+	
+	
 
 	public void declConst(String clef) throws IdentDejaPresentException{
 		Yaka.tabIdent.rangeIdent(clef, new IdConst(clef,0,0));
@@ -12,6 +14,7 @@ public class Declaration {
 	public void defConst(String clef, int type, int valeur) throws IdentPasPresentException{
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(valeur);
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(type);
+		
 		
 	}
 
