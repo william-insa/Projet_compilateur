@@ -14,20 +14,24 @@ options{
 }
 
 PARSER_BEGIN(Yaka)
-
-
+package generated;
+import utility.*;
 
 public class Yaka {
 
-	private Declaration declaration;
-	private TabIdent tabIdent;
-	private Expression expression;
-	private YVM yvm;
+	private static Declaration declaration;
+	public static TabIdent tabIdent;
+	private static Expression expression;
+	private static YVM yvm;
+
+	public Yaka ()	{		declaration = new Declaration();
+    	tabIdent = new TabIdent();
+	}
 	
   public static void main(String args[]) {
-    declaration = new Declaration();
-    tabIdent = new TabIdent();
+    
     Yaka analyseur;
+    analyseur = new Yaka();
     java.io.InputStream input;
 
     if (args.length==1) {
@@ -170,8 +174,8 @@ void defConst() : {}
     
 }
 
-void valConst() : {}{
-  {String clef = YakaTokenManager.identLu;}
+void valConst() : { String clef = YakaTokenManager.identLu;}{
+ 
   <entier> 		{declaration.defConst(clef,0, YakaTokenManager.entierLu);}
  | <ident>	  {declaration.defConst(clef, YakaTokenManager.identLu);} 	
  | <VRAI> 		{declaration.defConst(clef, 1, 1);}
@@ -181,10 +185,10 @@ void valConst() : {}{
 
 void declVar() : {}
 {
-  <VAR> type(){int type = 0; if (YakaTokenManger.chaineLue == "BOOLEEN")  {type = 1;}}
-  <ident>		{declaration.declvar(YakaTokenManager.identLu, type);}
+  <VAR> type(){int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")  {type = 1;}}
+  <ident>		{declaration.declVar(YakaTokenManager.identLu, type);}
   ("," 
-      <ident>  {declaration.declvar(YakaTokenManager.identLu, type);}
+      <ident>  {declaration.declVar(YakaTokenManager.identLu, type);}
   )* ";"
 	
 }

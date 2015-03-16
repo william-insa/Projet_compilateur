@@ -9,11 +9,11 @@ public class TabIdent {
 		table = new HashMap<String, Ident>();
 	}
 
-	public Ident chercheIdent(String _clef) throws IdentPasPresentException {
+	public Ident chercheIdent(String _clef) {
 		if (existeIdent(_clef)) {
 			return this.table.get(_clef);
-		} else
-			throw new IdentPasPresentException();
+		}
+		return null;
 
 	}
 
@@ -21,11 +21,9 @@ public class TabIdent {
 		return this.table.containsKey(_clef);
 	}
 
-	public void rangeIdent(String _clef, Ident _ident)
-			throws IdentDejaPresentException {
+	public void rangeIdent(String _clef, Ident _ident){
 		if (!existeIdent(_clef)) {
 			this.table.put(_clef, _ident);
-		} else
-			throw new IdentDejaPresentException();
+		}
 	}
 }
