@@ -26,4 +26,16 @@ public class TabIdent {
 			this.table.put(_clef, _ident);
 		}
 	}
+	
+	public int getNbVar() { 
+		int i =0;
+		for(Ident id : table.values()) {
+			if (!id.isConst())
+			{
+				i++;
+			}
+		}
+		
+		return i;
+	}
 }

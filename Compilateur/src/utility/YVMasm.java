@@ -28,9 +28,9 @@ public class YVMasm implements YVM {
 	
 	
 	public void ouvrePrinc(int x){
-		Ecriture.ecrireStringln (file,";ouvrePrinc " + x);
+		Ecriture.ecrireStringln (file,";ouvrePrinc " + 2*x);
 	    Ecriture.ecrireStringln (file,"mov bp,sp");
-	    Ecriture.ecrireStringln (file,"sub sp," + x);
+	    Ecriture.ecrireStringln (file,"sub sp," + 2*x);
 	}
 	
 	public void iconst(int valeur){

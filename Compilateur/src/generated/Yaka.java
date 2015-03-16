@@ -4,10 +4,10 @@ import utility.*;
 
 public class Yaka implements YakaConstants {
 
-        private static Declaration declaration;
+        public static Declaration declaration;
         public static TabIdent tabIdent;
-        private static Expression expression;
-        private static YVM yvm;
+        public static Expression expression;
+        public static YVM yvm;
 
         public Yaka ()
         {
@@ -86,6 +86,7 @@ public class Yaka implements YakaConstants {
       }
       declVar();
     }
+  yvm.ouvrePrinc(tabIdent.getNbVar());
     suiteExpr();
   }
 
@@ -128,7 +129,7 @@ public class Yaka implements YakaConstants {
       break;
     case VRAI:
       jj_consume_token(VRAI);
-                         declaration.defConst(clef, 1, 1);
+                         declaration.defConst(clef, 1, -1);
       break;
     case FAUX:
       jj_consume_token(FAUX);
@@ -293,11 +294,13 @@ public class Yaka implements YakaConstants {
     case ident:
     case 43:
       primaire();
+                expression.evaluation();
       break;
     case NON:
     case 51:
       opNeg();
       primaire();
+                         expression.evaluationNeg();
       break;
     default:
       jj_la1[12] = jj_gen;
@@ -330,17 +333,19 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case entier:
       jj_consume_token(entier);
-                         expression.empilerInt(YakaTokenManager.entierLu);
+                         yvm.iconst(YakaTokenManager.entierLu);
       break;
     case ident:
       jj_consume_token(ident);
-                         expression.empiler(YakaTokenManager.identLu);
+                         expression.empilerIdent(YakaTokenManager.identLu);
       break;
     case VRAI:
       jj_consume_token(VRAI);
+                         yvm.iconst(-1); expression.empilerBool();
       break;
     case FAUX:
       jj_consume_token(FAUX);
+                         yvm.iconst(0); expression.empilerBool();
       break;
     default:
       jj_la1[14] = jj_gen;
@@ -353,27 +358,27 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 42:
       jj_consume_token(42);
-        expression.empilerOPREL("=");
+        expression.empilerOP("=");
       break;
     case 45:
       jj_consume_token(45);
-                 expression.empilerOPREL("<>");
+                 expression.empilerOP("<>");
       break;
     case 46:
       jj_consume_token(46);
-                 expression.empilerOPREL("<");
+                 expression.empilerOP("<");
       break;
     case 47:
       jj_consume_token(47);
-                 expression.empilerOPREL("<=");
+                 expression.empilerOP("<=");
       break;
     case 48:
       jj_consume_token(48);
-                 expression.empilerOPREL(">");
+                 expression.empilerOP(">");
       break;
     case 49:
       jj_consume_token(49);
-                 expression.empilerOPREL(">=");
+                 expression.empilerOP(">=");
       break;
     default:
       jj_la1[15] = jj_gen;
@@ -386,15 +391,15 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 50:
       jj_consume_token(50);
-                 expression.empilerOPADD("+");
+                 expression.empilerOP("+");
       break;
     case 51:
       jj_consume_token(51);
-           expression.empilerOPADD("-");
+           expression.empilerOP("-");
       break;
     case OU:
       jj_consume_token(OU);
-                 expression.empilerOPADD("OU");
+                 expression.empilerOP("OU");
       break;
     default:
       jj_la1[16] = jj_gen;
@@ -407,15 +412,15 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 52:
       jj_consume_token(52);
-                 expression.empilerOPMUL("*");
+                 expression.empilerOP("*");
       break;
     case 53:
       jj_consume_token(53);
-                 expression.empilerOPMUL("/");
+                 expression.empilerOP("/");
       break;
     case ET:
       jj_consume_token(ET);
-                 expression.empilerOPMUL("ET");
+                 expression.empilerOP("ET");
       break;
     default:
       jj_la1[17] = jj_gen;
@@ -428,11 +433,11 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case 51:
       jj_consume_token(51);
-                 expression.empilerOPNEG("-");
+                 expression.empilerOP("-");
       break;
     case NON:
       jj_consume_token(NON);
-                 expression.empilerOPNEG("NON");
+                 expression.empilerOP("NON");
       break;
     default:
       jj_la1[18] = jj_gen;

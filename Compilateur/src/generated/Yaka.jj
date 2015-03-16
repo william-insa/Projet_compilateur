@@ -19,10 +19,10 @@ import utility.*;
 
 public class Yaka {
 
-	private static Declaration declaration;
+	public static Declaration declaration;
 	public static TabIdent tabIdent;
-	private static Expression expression;
-	private static YVM yvm;
+	public static Expression expression;
+	public static YVM yvm;
 
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
@@ -157,7 +157,8 @@ void analyse() : {}
 
 void bloc() : {}{
  (declConst())*
- (declVar())*		
+ (declVar())*
+ {yvm.ouvrePrinc(tabIdent.getNbVar());}		
    suiteExpr() 
 }
 
@@ -178,7 +179,7 @@ void valConst() : { String clef = YakaTokenManager.identLu;}{
  
   <entier> 		{declaration.defConst(clef,0, YakaTokenManager.entierLu);}
  | <ident>	  {declaration.defConst(clef, YakaTokenManager.identLu);} 	
- | <VRAI> 		{declaration.defConst(clef, 1, 1);}
+ | <VRAI> 		{declaration.defConst(clef, 1, -1);}
  | <FAUX> 		{declaration.defConst(clef, 1, 0);}
 }
 
@@ -202,7 +203,7 @@ void type() :{}
  * Syntaxe des instructions.
  */
 void suiteExpr() : {}
-{ (expression() (";" (expression())? )*)? }
+{ (expression() (";" (expression() )?  )* )? }
 
 
 
@@ -213,7 +214,7 @@ void expression() : {}
 {
   simpleExpr() 
   (opRel() 
-  simpleExpr() 
+  simpleExpr()  
   )?
 }
 
@@ -223,19 +224,19 @@ void simpleExpr() : {}
 {
    terme() 
    (opAdd() 
-   terme()	
-   )*
+   terme()
+   )*  
 } 
 void terme() : {}
 {
   facteur() 
   (opMul() 
-  facteur()	
+  facteur()
   )*
 }
 void facteur() : {}
-{   primaire() 
-  |  opNeg() primaire() 
+{   primaire() {expression.evaluation();}
+  |  opNeg() primaire() {expression.evaluationNeg();}
 }
 
 void primaire (): {}
@@ -246,40 +247,40 @@ void primaire (): {}
 }
 
 void valeur () : {}
-{ <entier> 		{expression.empilerInt(YakaTokenManager.entierLu);}
- | <ident> 		{expression.empiler(YakaTokenManager.identLu);}
- | <VRAI> 		
- | <FAUX> 		
+{ <entier> 		{yvm.iconst(YakaTokenManager.entierLu);}
+ | <ident> 		{expression.empilerIdent(YakaTokenManager.identLu);}
+ | <VRAI> 		{yvm.iconst(-1); expression.empilerBool();}
+ | <FAUX> 		{yvm.iconst(0); expression.empilerBool();}
  
 }
 
 void opRel() : {}
 {
-   "=" {expression.empilerOPREL("=");}
- | "<>" 	{expression.empilerOPREL("<>");}
- | "<" 		{expression.empilerOPREL("<");}
- | "<=" 	{expression.empilerOPREL("<=");}
- | ">" 		{expression.empilerOPREL(">");}
- | ">=" 	{expression.empilerOPREL(">=");}
+   "=" {expression.empilerOP("=");}
+ | "<>" 	{expression.empilerOP("<>");}
+ | "<" 		{expression.empilerOP("<");}
+ | "<=" 	{expression.empilerOP("<=");}
+ | ">" 		{expression.empilerOP(">");}
+ | ">=" 	{expression.empilerOP(">=");}
 } 
 
 void opAdd() : {}
 {
-    "+"		{expression.empilerOPADD("+");}
-  |  "-"  {expression.empilerOPADD("-");}
-  | <OU> 	{expression.empilerOPADD("OU");}
+    "+"		{expression.empilerOP("+");}
+  |  "-"  {expression.empilerOP("-");}
+  | <OU> 	{expression.empilerOP("OU");}
 }
 
 void opMul() : {}
 {
-  "*"		{expression.empilerOPMUL("*");}
-  | "/"		{expression.empilerOPMUL("/");}
-  | <ET>	{expression.empilerOPMUL("ET");}
+  "*"		{expression.empilerOP("*");}
+  | "/"		{expression.empilerOP("/");}
+  | <ET>	{expression.empilerOP("ET");}
 } 
 
 void opNeg() : {}
-{ "-" 		{expression.empilerOPNEG("-");}
- | <NON>	{expression.empilerOPNEG("NON");}
+{ "-" 		{expression.empilerOP("-");}
+ | <NON>	{expression.empilerOP("NON");}
 }
 
 
