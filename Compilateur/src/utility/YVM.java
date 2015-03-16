@@ -1,5 +1,7 @@
 package utility;
 
+import java.io.IOException;
+
 public interface YVM {
 
 	public void entete();

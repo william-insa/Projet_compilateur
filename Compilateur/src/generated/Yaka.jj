@@ -24,7 +24,9 @@ public class Yaka {
 	private Expression expression;
 	private YVM yvm;
 	
-  public static void main(String args[]) { 
+  public static void main(String args[]) {
+    declaration = new Declaration();
+    tabIdent = new TabIdent();
     Yaka analyseur;
     java.io.InputStream input;
 
@@ -141,9 +143,12 @@ TOKEN  :
 /**************************************/
 void analyse() : {}
 {
-   <PROGRAMME> <ident>	
+   <PROGRAMME>    <ident>	
+   {yvm = new YVMasm(YakaTokenManager.identLu);
+    expression = new Expression(yvm);
+     yvm.entete();}
    bloc()
-   <FPROGRAMME> 
+   <FPROGRAMME>   {yvm.queue();}
 }
 
 void bloc() : {}{
@@ -160,16 +165,17 @@ void declConst() : {}
 void defConst() : {}
 {
 	
-  <ident>  	  	
+  <ident>  {declaration.declConst(YakaTokenManager.identLu);  }  	
    "=" valConst()
     
 }
 
 void valConst() : {}{
-  <entier> 		
- | <ident>		
- | <VRAI> 		
- | <FAUX> 		
+  {String clef = YakaTokenManager.identLu;}
+  <entier> 		{declaration.defConst(clef,0, YakaTokenManager.entierLu);}
+ | <ident>	  {declaration.defConst(clef, YakaTokenManager.identLu);} 	
+ | <VRAI> 		{declaration.defConst(clef, 1, 1);}
+ | <FAUX> 		{declaration.defConst(clef, 1, 0);}
 }
 
 

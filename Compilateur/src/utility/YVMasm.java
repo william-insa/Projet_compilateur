@@ -1,5 +1,6 @@
 package utility;
 
+import java.io.IOException;
 import java.io.OutputStream;
 
 public class YVMasm implements YVM {
@@ -7,9 +8,9 @@ public class YVMasm implements YVM {
 	private OutputStream  file;
 	private int comptString;
 	
-	public YVMasm() {
+	public YVMasm(String nom) {
 		super();
-		file = Ecriture.ouvrir("result.asm");
+		file = Ecriture.ouvrir(nom+".asm");
 		this.comptString = 0;
 	}
 	
@@ -106,6 +107,7 @@ public class YVMasm implements YVM {
 	    Ecriture.ecrireStringln (file,"nop");
 	    Ecriture.ecrireStringln (file,"exitcode");
 	    Ecriture.ecrireStringln (file,"end debut");
+		Ecriture.fermer(file);
 	}
 
 	public void iinf() {
