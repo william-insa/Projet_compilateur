@@ -1,52 +1,22 @@
 package utility;
+import generated.*;
 
 
-import java.util.Stack;
 
 public class Declaration {
-	private Stack<String> pileNom;
-	private Stack<Integer> pileType;
-	private Stack<Integer> pileVal;
-	private TabIdent table;
-	
-	public Declaration(TabIdent ta){
-		pileNom = new Stack<String>();
-		pileType = new Stack<Integer>();
-		pileVal = new Stack<Integer>();
-		table = ta;
-		
-	}
-	
 
-	public void declConst(){
-		//TODO on fait quoi ici?
+	public void declConst(String clef) throws IdentDejaPresentException{
+		Yaka.tabIdent.rangeIdent(clef, new IdConst(clef,0,0));
 	}
-	public void defConst(){
-		// TODO recup du nom
-	}
-	public void valConst() throws IdentDejaPresentException{
-		String name = pileNom.pop();
-		int type = pileType.pop();
-		int val= pileVal.pop();
+
+	public void defConst(String clef, int type, int valeur) throws IdentPasPresentException{
+		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(valeur);
+		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(type);
 		
-		Ident id = new IdConst(name, type, val);
-		
-		if (table.existeIdent(name))
-			table.rangeIdent(name, id);
-		else
-			throw new IdentDejaPresentException();
 	}
-	public void declVar() throws IdentDejaPresentException{
-		String name = pileNom.pop();
-		int type = pileType.pop();
-		int val= pileVal.pop();
 	
-		Ident id = new IdVar(name, type, val);
-	
-		if (table.existeIdent(name))
-			table.rangeIdent(name, id);
-		else
-			throw new IdentDejaPresentException();
+	public void declVar(String clef, int type) throws IdentDejaPresentException{
+		Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,0));
 	}
 	
 	
