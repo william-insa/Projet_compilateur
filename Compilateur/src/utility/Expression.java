@@ -18,20 +18,22 @@ public class Expression {
 		yvm = _yvm;
 	}
 	
-	public void empiler (Ident _op) throws IdentPasPresentException {
-		if (Yaka.tabIdent.existeIdent(_op.getName())) {
-			this.pileOperande.add(_op.getType());
-			if (_op.getClass().isInstance(IdConst.class)) {
-				IdConst t = (IdConst) _op;
-				yvm.iconst(t.getValeur());
+	public void empiler (String _op)  {
+		if (Yaka.tabIdent.existeIdent(_op)) {
+			Ident ident = Yaka.tabIdent.chercheIdent(_op);
+			this.pileOperande.add(ident.getType());
+			
+			if (ident.isConst()) {
+				yvm.iconst(((IdConst) ident).getValeur());
 			}
-			else if (_op.getClass().isInstance(IdVar.class)) {
-				IdVar t = (IdVar) _op;
-				yvm.iload(t.getOffset());
+			else {
+				yvm.iload(((IdVar) ident).getOffset());
 			}
 		}
-		else
-			throw new IdentPasPresentException();
+	}
+	
+	public void empilerInt (int i)  {
+		yvm.iconst(i);
 	}
 	
 	public void empilerOPREL (String _op) {

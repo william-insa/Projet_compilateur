@@ -246,8 +246,8 @@ void primaire (): {}
 }
 
 void valeur () : {}
-{ <entier> 		
- | <ident> 		
+{ <entier> 		{expression.empilerInt(YakaTokenManager.entierLu);}
+ | <ident> 		{expression.empiler(YakaTokenManager.identLu);}
  | <VRAI> 		
  | <FAUX> 		
  

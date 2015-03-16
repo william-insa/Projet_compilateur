@@ -18,4 +18,6 @@ public abstract class Ident {
 	public void setName(String _n) { this.name = _n; }
 	public int getType() { return this.type; }
 	public void setType(int _t) { this.type = _t; }
+	
+	public boolean isConst() { return false; }
 }
