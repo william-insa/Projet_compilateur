@@ -33,7 +33,51 @@ public class Expression {
 		else
 			throw new IdentPasPresentException();
 	}
-	public void empiler (String _op) {this.pileOperateur.add(_op);}
+	
+	public void empiler (String _op) {this.pileOperateur.add(_op);
+		
+		switch(_op) {
+		case "+":
+			yvm.iadd();
+			break;
+		case "-":
+			yvm.isub();
+			break;
+		case "/":
+			yvm.idiv();
+			break;
+		case "*":
+			yvm.imul();
+			break;
+		case "<":
+			yvm.iinf();
+			break;
+		case ">":
+			yvm.isup();
+			break;
+		case "<=":
+			yvm.iinfegal();
+			break;
+		case ">=":
+			yvm.isupegal();
+			break;
+		case "OU":
+			yvm.ior();
+			break;
+		case "ET":
+			yvm.iand();
+			break;
+		case "NON":
+			yvm.inot();
+			break;
+		}
+	
+	}
+	
+	public void empilerINEG(String _op) {
+		this.pileOperateur.add(_op);
+		yvm.ineg();
+	}
 	
 	public boolean calcul(String ope) { return ope.equals("+") || ope.equals("-") || ope.equals("/") || ope.equals("*"); }
 	public boolean comparaisonEntier(String ope) { return ope.equals("<") || ope.equals(">") || ope.equals("<=") || ope.equals(">="); }
