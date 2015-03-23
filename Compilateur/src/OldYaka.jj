@@ -23,9 +23,18 @@ public class Yaka {
 	public static TabIdent tabIdent;
 	public static Expression expression;
 	public static YVM yvm;
-
+	
+	public static int dernierType;
+	public static int nbFaire;
+	public static int lastFaire;
+	
+	public static int nbSi;
+	public static int lastSi;
+	
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
+    	nbFaire=1;
+    	nbSi=1;
 	}
 	
   public static void main(String args[]) {
@@ -158,8 +167,8 @@ void analyse() : {}
 void bloc() : {}{
  (declConst())*
  (declVar())*
- {yvm.ouvrePrinc(tabIdent.getNbVar());}		
-   suiteExpr() 
+ {yvm.ouvrePrinc(tabIdent.getNbVar());}		
+  suiteInstr()
 }
 
 void declConst() : {}
@@ -169,16 +178,14 @@ void declConst() : {}
 
 void defConst() : {}
 {
-	
-  <ident>  {declaration.declConst(YakaTokenManager.identLu);  }  	
+  <ident>  {declaration.declConst(YakaTokenManager.identLu);}  	
    "=" valConst()
-    
 }
 
-void valConst() : { String clef = YakaTokenManager.identLu;}{
- 
+void valConst() : {String clef = YakaTokenManager.identLu;}
+{
   <entier> 		{declaration.defConst(clef,0, YakaTokenManager.entierLu);}
- | <ident>	  {declaration.defConst(clef, YakaTokenManager.identLu);} 	
+ | <ident>	  	{declaration.defConst(clef, YakaTokenManager.identLu);} 	
  | <VRAI> 		{declaration.defConst(clef, 1, -1);}
  | <FAUX> 		{declaration.defConst(clef, 1, 0);}
 }
@@ -186,7 +193,7 @@ void valConst() : { String clef = YakaTokenManager.identLu;}{
 
 void declVar() : {}
 {
-  <VAR> type(){int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")  {type = 1;}}
+  <VAR> type(){int type = 0; if (dernierType == 1)  				{type = 1;}}
   <ident>		{declaration.declVar(YakaTokenManager.identLu, type);}
   ("," 
       <ident>  {declaration.declVar(YakaTokenManager.identLu, type);}
@@ -196,15 +203,54 @@ void declVar() : {}
 
 void type() :{}
 {
-   <ENTIER> 
- | <BOOLEEN>	
+   <ENTIER>  {dernierType = 0;}
+ | <BOOLEEN>	{dernierType = 1;}
 }
 /*
  * Syntaxe des instructions.
  */
-void suiteExpr() : {}
-{ (expression() (";" (expression() )?  )* )? }
+void suiteInstr() : {}
+{ (instruction() (";" (instruction() )?  )* )? }
 
+void instruction() : {}
+{
+	affectation() | lecture() | ecriture() | iteration() | conditionnelle()
+}
+
+void affectation() : {IdVar temp;}
+{
+	<ident> {temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {expression.aff(temp); yvm.istore(temp.getOffset());}
+}
+
+void lecture() : {}
+{
+	<LIRE> "(" <ident> ")"  {yvm.lireEnt(((IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu)).getOffset());}
+}
+
+void ecriture() : {}
+{
+	<ECRIRE> "(" ( expression() {if(expression.ecr()==0) yvm.ecrireEnt(); else if(expression.ecr()==1) yvm.ecrireBool();} | <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
+	| <ALALIGNE> {yvm.aLaLigne();}
+}
+
+/*
+ * Itération
+ */
+void iteration() : {int temp=nbFaire;}
+{
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() 
+	| <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
+
+}
+
+/*
+ * Conditionnelle
+ */
+void conditionnelle() : {int temp=nbSi;}
+{
+	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.etiquette("SINON"+temp);yvm.Goto("FSI"+temp);}
+	| <FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
+}
 
 
 /*
@@ -236,7 +282,7 @@ void terme() : {}
 }
 void facteur() : {}
 {   primaire()
-  |  opNeg() primaire()
+  |  opNeg() primaire() {expression.evaluationNeg();}
 }
 
 void primaire (): {}
@@ -279,7 +325,7 @@ void opMul() : {}
 } 
 
 void opNeg() : {}
-{ "-" 		{expression.empilerOP("-");}
+{ "-" 		{expression.empilerOP("NEG");}
  | <NON>	{expression.empilerOP("NON");}
 }
 

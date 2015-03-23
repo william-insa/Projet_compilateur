@@ -160,7 +160,10 @@ void analyse() : {}
    {yvm = new YVMasm(YakaTokenManager.identLu);
     expression = new Expression(yvm);
      yvm.entete();}
+     (declFonction())*
+     <PRINCIPAL>
    bloc()
+   <FPRINCIPAL>
    <FPROGRAMME>   {yvm.queue();}
 }
 
@@ -207,6 +210,32 @@ void type() :{}
  | <BOOLEEN>	{dernierType = 1;}
 }
 /*
+ * Fonctions
+ */
+void declFonction() : {}
+{
+	type() <FONCTION> <ident> paramForms()
+}
+
+void paramForms() : {}
+{
+	("("(paramForm() (","paramForm())*)?")")?
+}
+void paramForm()  : {}
+{
+	type() <ident>
+}
+
+void retourne() : {}
+{
+	<RETOURNE> expression()
+}
+
+void argumentsFonction() : {}
+{
+	"("(expression() (","expression())*)?")"
+}
+/*
  * Syntaxe des instructions.
  */
 void suiteInstr() : {}
@@ -214,7 +243,7 @@ void suiteInstr() : {}
 
 void instruction() : {}
 {
-	affectation() | lecture() | ecriture() | iteration() | conditionnelle()
+	affectation() | lecture() | ecriture() | iteration() | conditionnelle() | retourne()
 }
 
 void affectation() : {IdVar temp;}
@@ -229,7 +258,7 @@ void lecture() : {}
 
 void ecriture() : {}
 {
-	<ECRIRE> "(" ( expression() {yvm.ecrireEnt();} | <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
+	<ECRIRE> "(" ( expression() {if(expression.ecr()==0) yvm.ecrireEnt(); else yvm.ecrireBool();} | <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
 	| <ALALIGNE> {yvm.aLaLigne();}
 }
 
@@ -238,7 +267,7 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() 
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() 
 	| <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 
 }
@@ -248,7 +277,7 @@ void iteration() : {int temp=nbFaire;}
  */
 void conditionnelle() : {int temp=nbSi;}
 {
-	<SI> {lastSi=nbSi;nbSi++;} expression() {yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.etiquette("SINON"+temp);yvm.Goto("FSI"+temp);}
+	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.Goto("FSI"+temp);yvm.etiquette("SINON"+temp);}
 	| <FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
 }
 
@@ -294,7 +323,7 @@ void primaire (): {}
 
 void valeur () : {}
 { <entier> 		{yvm.iconst(YakaTokenManager.entierLu); expression.empilerInt();}
- | <ident> 		{expression.empilerIdent(YakaTokenManager.identLu);}
+ | <ident> ( argumentsFonction() )?		{expression.empilerIdent(YakaTokenManager.identLu);}
  | <VRAI> 		{yvm.iconst(-1); expression.empilerBool();}
  | <FAUX> 		{yvm.iconst(0); expression.empilerBool();}
  

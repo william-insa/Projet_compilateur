@@ -137,6 +137,14 @@ public class Expression {
 		
 		if (typeI != typeE) System.out.println("Erreur d'affectation.");
 		
-		pileOperande.push(typeE); // On le supprime quand?
+	}
+	
+	public int ecr() {
+		return pileOperande.pop();
+	}
+	
+	public void cond() {
+		if (pileOperande.pop()!=1)
+			System.out.println("La condition n'est pas de type booléen.");
 	}
 }
