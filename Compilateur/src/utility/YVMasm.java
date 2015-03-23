@@ -231,4 +231,15 @@ public class YVMasm implements YVM {
 		Ecriture.ecrireStringln(file, ";ecrireBool");
 		Ecriture.ecrireStringln(file, "call ecrbool");
 	}
+	
+	public void etiquette(String etiq) {
+		Ecriture.ecrireStringln(file, etiq+":");
+	}
+	
+	public void iffaux(String etiq) {
+		Ecriture.ecrireStringln(file, ";iffaux " + etiq + ":");
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "cmp ax,0");
+		Ecriture.ecrireStringln(file, "je" + etiq);
+	}
 }

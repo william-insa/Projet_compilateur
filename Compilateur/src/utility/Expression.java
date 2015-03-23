@@ -59,46 +59,26 @@ public class Expression {
 		operateur = pileOperateur.pop();
 		typeA = pileOperande.pop();
 		
-		if (operateur.equals("NON") || operateur.equals("NEG")) {
-			if (estBon(typeA,operateur)) {
-				pileOperande.push(typeA);
+
+		typeB = pileOperande.pop();
+	
+		if(!(estBon(typeA,operateur) && typeA == typeB)) {
+			if (typeA!=-1 && typeB!=-1){
+				System.out.println("Erreur de type.");
 			}
-			else{
-				if (typeA!=-1){
-					System.out.println("Erreur de type.");
-				}
-				
-				pileOperande.push(-1);
-				}
-			switch(operateur) {
-			case "NON":
-				yvm.inot();
-				break;
-			case "-":
-				yvm.ineg();
-				break;
+			type=-1;
+		}
+		else
+		{
+			if (typeA==1) { type=1; }
+			else {
+				if (calcul(operateur)) { type = 0; }
+				else { type = 1; }
 			}
 		}
-		else {
-			typeB = pileOperande.pop();
+		pileOperande.push(type);
 		
-			if(!(estBon(typeA,operateur) && typeA == typeB)) {
-				if (typeA!=-1 && typeB!=-1){
-					System.out.println("Erreur de type.");
-				}
-				type=-1;
-			}
-			else
-			{
-				if (typeA==1) { type=1; }
-				else {
-					if (calcul(operateur)) { type = 0; }
-					else { type = 1; }
-				}
-			}
-			pileOperande.push(type);
-		
-			switch(operateur) {
+		switch(operateur) {
 			case "<":
 				yvm.iinf();	break;
 			case ">":
@@ -121,7 +101,33 @@ public class Expression {
 				yvm.iadd();break;
 			case "-":
 				yvm.isub();break;
+		}
+	}
+	
+	public void evaluationNeg() {
+		String operateur;
+		int typeA;
+		
+		operateur = pileOperateur.pop();
+		typeA = pileOperande.pop();
+		
+		if (estBon(typeA,operateur)) {
+			pileOperande.push(typeA);
+		}
+		else{
+			if (typeA!=-1){
+				System.out.println("Erreur de type.");
 			}
+			
+			pileOperande.push(-1);
+			}
+		switch(operateur) {
+		case "NON":
+			yvm.inot();
+			break;
+		case "-":
+			yvm.ineg();
+			break;
 		}
 	}
 	

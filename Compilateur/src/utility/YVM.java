@@ -55,5 +55,8 @@ public interface YVM {
 	public void ecrireEnt();
 
 	public void ecrireBool();
-
+	
+	public void etiquette(String etiq);
+	
+	public void iffaux(String etiq);
 }

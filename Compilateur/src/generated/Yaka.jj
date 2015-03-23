@@ -25,9 +25,12 @@ public class Yaka {
 	public static YVM yvm;
 	
 	public static int dernierType;
-
+	public static int nbFaire;
+	public static int lastFaire;
+	
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
+    	nbFaire=1;
 	}
 	
   public static void main(String args[]) {
@@ -207,7 +210,7 @@ void suiteInstr() : {}
 
 void instruction() : {}
 {
-	affectation() | lecture() | ecriture()
+	affectation() | lecture() | ecriture() | iteration() | finIteration()
 }
 
 void affectation() : {IdVar temp;}
@@ -229,7 +232,16 @@ void ecriture() : {}
 /*
  * Itération
  */
+void iteration() : {int temp=nbFaire;}
+{
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;} expression() {yvm.iffaux("FAIT"+temp);} <FAIRE> instruction()
 
+}
+
+void finIteration() : {}
+{
+	<FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire=nbFaire-1;}
+}
 
 /*
  * Expression .
@@ -260,7 +272,7 @@ void terme() : {}
 }
 void facteur() : {}
 {   primaire()
-  |  opNeg() primaire()
+  |  opNeg() primaire() {expression.evaluationNeg();}
 }
 
 void primaire (): {}
