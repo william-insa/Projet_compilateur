@@ -28,9 +28,13 @@ public class Yaka {
 	public static int nbFaire;
 	public static int lastFaire;
 	
+	public static int nbSi;
+	public static int lastSi;
+	
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
     	nbFaire=1;
+    	nbSi=1;
 	}
 	
   public static void main(String args[]) {
@@ -210,7 +214,7 @@ void suiteInstr() : {}
 
 void instruction() : {}
 {
-	affectation() | lecture() | ecriture() | iteration() | finIteration()
+	affectation() | lecture() | ecriture() | iteration() | conditionnelle()
 }
 
 void affectation() : {IdVar temp;}
@@ -234,14 +238,20 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;} expression() {yvm.iffaux("FAIT"+temp);} <FAIRE> instruction()
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() 
+	| <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 
 }
 
-void finIteration() : {}
+/*
+ * Conditionnelle
+ */
+void conditionnelle() : {int temp=nbSi;}
 {
-	<FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire=nbFaire-1;}
+	<SI> {lastSi=nbSi;nbSi++;} expression() {yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.etiquette("SINON"+temp);yvm.Goto("FSI"+temp);}
+	| <FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
 }
+
 
 /*
  * Expression .
