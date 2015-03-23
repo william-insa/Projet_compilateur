@@ -240,6 +240,6 @@ public class YVMasm implements YVM {
 		Ecriture.ecrireStringln(file, ";iffaux " + etiq + ":");
 		Ecriture.ecrireStringln(file, "pop ax");
 		Ecriture.ecrireStringln(file, "cmp ax,0");
-		Ecriture.ecrireStringln(file, "je" + etiq);
+		Ecriture.ecrireStringln(file, "je " + etiq);
 	}
 }
