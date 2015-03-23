@@ -26,7 +26,7 @@ public class Declaration {
 	}
 	
 	public void declVar(String clef, int type) {
-		Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,0));
+		Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,-2*(1+Yaka.tabIdent.getNbVar())));
 	}
 	
 	

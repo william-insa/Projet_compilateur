@@ -21,8 +21,9 @@ public class Expression {
 	public void empilerIdent (String _op)  {
 		if (Yaka.tabIdent.existeIdent(_op)) {
 			Ident ident = Yaka.tabIdent.chercheIdent(_op);
-			pileOperande.add(ident.getType());
 			
+			pileOperande.add(ident.getType());
+		
 			if (ident.isConst()) {
 				yvm.iconst(((IdConst) ident).getValeur());
 			}
@@ -36,7 +37,8 @@ public class Expression {
 		this.pileOperateur.add(_op);
 	}
 	
-	public void empilerBool() { this.pileOperande.add(1); }
+	public void empilerBool() { this.pileOperande.add(1);}
+	public void empilerInt() { this.pileOperande.add(0);}
 	
 	public boolean calcul(String ope) { return ope.equals("+") || ope.equals("-") || ope.equals("/") || ope.equals("*"); }
 	public boolean comparaisonEntier(String ope) { return ope.equals("<") || ope.equals(">") || ope.equals("<=") || ope.equals(">="); }
@@ -56,67 +58,62 @@ public class Expression {
 		
 		operateur = pileOperateur.pop();
 		typeA = pileOperande.pop();
-		typeB = pileOperande.pop();
-System.out.println("coucou\n");
-		if(!estBon(typeA,operateur) && typeA == typeB) {
-			type=-1;
-		}
-		else
-		{
-			if (typeA==1) { type=1; }
-			else {
-				if (calcul(operateur)) { type = 0; }
-				else { type = 1; }
+		
+		if (operateur.equals("NON") || operateur.equals("NEG")) {
+			if (estBon(typeA,operateur)) {
+				pileOperande.push(typeA);
+			}
+			else
+				pileOperande.push(-1);
+			switch(operateur) {
+			case "NON":
+				yvm.inot();
+				break;
+			case "-":
+				yvm.ineg();
+				break;
 			}
 		}
-		pileOperande.push(type);
+		else {
+			typeB = pileOperande.pop();
 		
-		switch(operateur) {
-		case "<":
-			yvm.iinf();	break;
-		case ">":
-			yvm.isup();	break;
-		case "<=":
-			yvm.iinfegal();break;
-		case ">=":
-			yvm.isupegal();break;
-		case "NON":
-			yvm.inot();break;
-		case "ET":
-			yvm.iand();break;
-		case "/":
-			yvm.idiv();break;
-		case "*":
-			yvm.imul();break;
-		case "OU":
-			yvm.ior();break;
-		case "+":
-			yvm.iadd();break;
-		case "-":
-			yvm.isub();break;
-		}
-	}
-	
-	public void evaluationNeg() {
-		String operateur;
-		int typeA;
-
-		operateur = pileOperateur.pop();
-		typeA = pileOperande.pop();
-			
-		if (estBon(typeA,operateur)) {
-			pileOperande.push(typeA);
-		}
-		else
-			pileOperande.push(-1);
+			if(!estBon(typeA,operateur) && typeA == typeB) {
+				type=-1;
+			}
+			else
+			{
+				if (typeA==1) { type=1; }
+				else {
+					if (calcul(operateur)) { type = 0; }
+					else { type = 1; }
+				}
+			}
+			pileOperande.push(type);
 		
-		switch(operateur) {
-		case "NON":
-			yvm.inot();
-			break;
-		case "-":
-			yvm.ineg();
-			break;
+			switch(operateur) {
+			case "<":
+				yvm.iinf();	break;
+			case ">":
+				yvm.isup();	break;
+			case "<=":
+				yvm.iinfegal();break;
+			case ">=":
+				yvm.isupegal();break;
+			case "NON":
+				yvm.inot();break;
+			case "ET":
+				yvm.iand();break;
+			case "/":
+				yvm.idiv();break;
+			case "*":
+				yvm.imul();break;
+			case "OU":
+				yvm.ior();break;
+			case "+":
+				yvm.iadd();break;
+			case "-":
+				yvm.isub();break;
+			}
 		}
 	}
 }

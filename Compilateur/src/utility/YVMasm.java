@@ -61,7 +61,7 @@ public class YVMasm implements YVM {
 	}
 	
 	public void iload (int x){
-		Ecriture.ecrireStringln (file,";iload");	
+		Ecriture.ecrireStringln (file,";iload "+x);	
 	    Ecriture.ecrireStringln (file,"push word ptr[bp" + x + "]");
 	}
 	

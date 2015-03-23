@@ -158,8 +158,8 @@ void analyse() : {}
 void bloc() : {}{
  (declConst())*
  (declVar())*
- {yvm.ouvrePrinc(tabIdent.getNbVar());}		
-  suiteInstr()
+ {yvm.ouvrePrinc(tabIdent.getNbVar());}		
+   suiteExpr() 
 }
 
 void declConst() : {}
@@ -202,33 +202,9 @@ void type() :{}
 /*
  * Syntaxe des instructions.
  */
-void suiteInstr() : {}
-{ (instruction() (";" (instruction() )?  )* )? }
+void suiteExpr() : {}
+{ (expression() (";" (expression() )?  )* )? }
 
-void instruction() : {}
-{
-	affectation() | lecture() | ecriture()
-}
-
-void affectation() : {IdVar temp;}
-{
-	<ident> {temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {yvm.istore(temp.getOffset());}
-}
-
-void lecture() : {}
-{
-	<LIRE> "(" <ident> ")"  {yvm.lireEnt(((IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu)).getOffset());}
-}
-
-void ecriture() : {}
-{
-	<ECRIRE> "(" ( expression() {yvm.ecrireEnt();} | <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
-	| <ALALIGNE> {yvm.aLaLigne();}
-}
-
-/*
- * Itération
- */
 
 
 /*
@@ -303,7 +279,7 @@ void opMul() : {}
 } 
 
 void opNeg() : {}
-{ "-" 		{expression.empilerOP("NEG");}
+{ "-" 		{expression.empilerOP("-");}
  | <NON>	{expression.empilerOP("NON");}
 }
 
