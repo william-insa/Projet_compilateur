@@ -215,8 +215,8 @@ public class YVMasm implements YVM {
 
 	public void ecrireChaine(String x) {
 		Ecriture.ecrireStringln(file, ";ecrireChaine " + x);
-		Ecriture.ecrireStringln(file, ".DATA\n\tmess" + this.comptString
-				+ " DB \"" + x + "$\"");
+		Ecriture.ecrireStringln(file, ".DATA\n\tmess" + this.comptString 
+				+ " DB " + "\"" + x.substring(1,x.length() - 1) + "$ \"");
 		Ecriture.ecrireStringln(file, ".CODE\n\tlea dx,mess" + this.comptString
 				+ "\n\tpush dx\n\tcall ecrch");
 		this.comptString++;

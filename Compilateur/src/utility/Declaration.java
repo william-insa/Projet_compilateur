@@ -22,7 +22,6 @@ public class Declaration {
 		IdConst temp = (IdConst) Yaka.tabIdent.chercheIdent(nom);
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(temp.getValeur());
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(temp.getType());
-		
 	}
 	
 	public void declVar(String clef, int type) {

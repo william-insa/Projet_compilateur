@@ -169,16 +169,14 @@ void declConst() : {}
 
 void defConst() : {}
 {
-	
-  <ident>  {declaration.declConst(YakaTokenManager.identLu);  }  	
+  <ident>  {declaration.declConst(YakaTokenManager.identLu);}  	
    "=" valConst()
-    
 }
 
-void valConst() : { String clef = YakaTokenManager.identLu;}{
- 
+void valConst() : {String clef = YakaTokenManager.identLu;}
+{
   <entier> 		{declaration.defConst(clef,0, YakaTokenManager.entierLu);}
- | <ident>	  {declaration.defConst(clef, YakaTokenManager.identLu);} 	
+ | <ident>	  	{declaration.defConst(clef, YakaTokenManager.identLu);} 	
  | <VRAI> 		{declaration.defConst(clef, 1, -1);}
  | <FAUX> 		{declaration.defConst(clef, 1, 0);}
 }
@@ -186,7 +184,8 @@ void valConst() : { String clef = YakaTokenManager.identLu;}{
 
 void declVar() : {}
 {
-  <VAR> type(){int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")  {type = 1;}}
+  <VAR> type()
+  {int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")  					{type = 1;}}
   <ident>		{declaration.declVar(YakaTokenManager.identLu, type);}
   ("," 
       <ident>  {declaration.declVar(YakaTokenManager.identLu, type);}
