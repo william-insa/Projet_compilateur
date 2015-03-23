@@ -9,6 +9,8 @@ public class Yaka implements YakaConstants {
         public static Expression expression;
         public static YVM yvm;
 
+        public static int dernierType;
+
         public Yaka ()
         {
                 declaration = new Declaration();
@@ -145,8 +147,8 @@ public class Yaka implements YakaConstants {
   static final public void declVar() throws ParseException {
     jj_consume_token(VAR);
     type();
-   int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")
-                                        {type = 1;}
+               int type = 0; if (dernierType == 1)
+                                {type = 1;}
     jj_consume_token(ident);
                          declaration.declVar(YakaTokenManager.identLu, type);
     label_4:
@@ -170,9 +172,11 @@ public class Yaka implements YakaConstants {
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case ENTIER:
       jj_consume_token(ENTIER);
+              dernierType = 0;
       break;
     case BOOLEEN:
       jj_consume_token(BOOLEEN);
+                 dernierType = 1;
       break;
     default:
       jj_la1[5] = jj_gen;
@@ -246,7 +250,7 @@ public class Yaka implements YakaConstants {
                  temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);
     jj_consume_token(42);
     expression();
-                                                                                                        yvm.istore(temp.getOffset());
+                                                                                                        expression.aff(temp); yvm.istore(temp.getOffset());
   }
 
   static final public void lecture() throws ParseException {

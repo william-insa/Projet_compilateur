@@ -18,7 +18,7 @@ public class Expression {
 		yvm = _yvm;
 	}
 	
-	public void empilerIdent (String _op)  {
+	public void empilerIdent (String _op) throws ParseException  {
 		if (Yaka.tabIdent.existeIdent(_op)) {
 			Ident ident = Yaka.tabIdent.chercheIdent(_op);
 			
@@ -63,8 +63,13 @@ public class Expression {
 			if (estBon(typeA,operateur)) {
 				pileOperande.push(typeA);
 			}
-			else
+			else{
+				if (typeA!=-1){
+					System.out.println("Erreur de type.");
+				}
+				
 				pileOperande.push(-1);
+				}
 			switch(operateur) {
 			case "NON":
 				yvm.inot();
@@ -77,7 +82,10 @@ public class Expression {
 		else {
 			typeB = pileOperande.pop();
 		
-			if(!estBon(typeA,operateur) && typeA == typeB) {
+			if(!(estBon(typeA,operateur) && typeA == typeB)) {
+				if (typeA!=-1 && typeB!=-1){
+					System.out.println("Erreur de type.");
+				}
 				type=-1;
 			}
 			else
@@ -115,5 +123,14 @@ public class Expression {
 				yvm.isub();break;
 			}
 		}
+	}
+	
+	public void aff(Ident i){
+		int typeI = i.getType();
+		int typeE = pileOperande.pop();
+		
+		if (typeI != typeE) System.out.println("Erreur d'affectation.");
+		
+		pileOperande.push(typeE); // On le supprime quand?
 	}
 }

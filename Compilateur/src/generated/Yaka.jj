@@ -23,6 +23,8 @@ public class Yaka {
 	public static TabIdent tabIdent;
 	public static Expression expression;
 	public static YVM yvm;
+	
+	public static int dernierType;
 
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
@@ -184,8 +186,7 @@ void valConst() : {String clef = YakaTokenManager.identLu;}
 
 void declVar() : {}
 {
-  <VAR> type()
-  {int type = 0; if (YakaTokenManager.chaineLue == "BOOLEEN")  					{type = 1;}}
+  <VAR> type(){int type = 0; if (dernierType == 1)  				{type = 1;}}
   <ident>		{declaration.declVar(YakaTokenManager.identLu, type);}
   ("," 
       <ident>  {declaration.declVar(YakaTokenManager.identLu, type);}
@@ -195,8 +196,8 @@ void declVar() : {}
 
 void type() :{}
 {
-   <ENTIER> 
- | <BOOLEEN>	
+   <ENTIER>  {dernierType = 0;}
+ | <BOOLEEN>	{dernierType = 1;}
 }
 /*
  * Syntaxe des instructions.
@@ -211,7 +212,7 @@ void instruction() : {}
 
 void affectation() : {IdVar temp;}
 {
-	<ident> {temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {yvm.istore(temp.getOffset());}
+	<ident> {temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {expression.aff(temp); yvm.istore(temp.getOffset());}
 }
 
 void lecture() : {}

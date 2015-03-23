@@ -1,5 +1,7 @@
 package utility;
 
+import generated.ParseException;
+
 import java.util.HashMap;
 
 public class TabIdent {
@@ -9,12 +11,13 @@ public class TabIdent {
 		table = new HashMap<String, Ident>();
 	}
 
-	public Ident chercheIdent(String _clef) {
+	public Ident chercheIdent(String _clef) throws ParseException {
 		if (existeIdent(_clef)) {
 			return this.table.get(_clef);
 		}
-		return null;
-
+		
+		throw (new ParseException ("Erreur ident inconnue : "+_clef+" \n"));
+		
 	}
 
 	public boolean existeIdent(String _clef) {
