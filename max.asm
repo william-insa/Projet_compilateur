@@ -8,5 +8,3 @@ STARTUPCODE
 ;ouvrePrinc 8
 mov bp,sp
 sub sp,8
-;iconst 10
-push 10
