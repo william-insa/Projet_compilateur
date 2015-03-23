@@ -18,7 +18,7 @@ public class Expression {
 		yvm = _yvm;
 	}
 	
-	public void empilerIdent (String _op)  {
+	public void empilerIdent (String _op) throws ParseException  {
 		if (Yaka.tabIdent.existeIdent(_op)) {
 			Ident ident = Yaka.tabIdent.chercheIdent(_op);
 			

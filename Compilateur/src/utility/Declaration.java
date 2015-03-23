@@ -11,14 +11,14 @@ public class Declaration {
 		Yaka.tabIdent.rangeIdent(clef, new IdConst(clef,0,0));
 	}
 
-	public void defConst(String clef, int type, int valeur) {
+	public void defConst(String clef, int type, int valeur) throws ParseException {
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(valeur);
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(type);
 		
 		
 	}
 
-	public void defConst(String clef, String nom) {
+	public void defConst(String clef, String nom) throws ParseException {
 		IdConst temp = (IdConst) Yaka.tabIdent.chercheIdent(nom);
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(temp.getValeur());
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(temp.getType());
