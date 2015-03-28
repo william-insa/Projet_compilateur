@@ -59,4 +59,14 @@ public interface YVM {
 	public void etiquette(String etiq);
 	
 	public void iffaux(String etiq);
+	
+	public void ouvreBloc(int x);
+	
+	public void fermeBloc(int x);
+	
+	public void ireturn(int offset);
+	
+	public void reserveRetour();
+	
+	public void call(String nom);
 }

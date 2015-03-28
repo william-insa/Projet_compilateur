@@ -242,4 +242,36 @@ public class YVMasm implements YVM {
 		Ecriture.ecrireStringln(file, "cmp ax,0");
 		Ecriture.ecrireStringln(file, "je " + etiq);
 	}
+
+	@Override
+	public void ouvreBloc(int x) {
+		Ecriture.ecrireStringln(file, ";ouvBloc " + x);
+		Ecriture.ecrireStringln(file, "enter "+x+",0");
+	}
+
+	@Override
+	public void fermeBloc(int x) {
+		Ecriture.ecrireStringln(file, ";fermeBloc " + x);
+		Ecriture.ecrireStringln(file, "leave");
+		Ecriture.ecrireStringln(file, "ret 4");
+	}
+
+	@Override
+	public void ireturn(int offset) {
+		Ecriture.ecrireStringln(file, ";ireturn " + offset);
+		Ecriture.ecrireStringln(file, "pop ax");
+		Ecriture.ecrireStringln(file, "mov [bp+" + offset + "],ax");
+	}
+
+	@Override
+	public void reserveRetour() {
+		Ecriture.ecrireStringln(file, ";reserveRetour");
+		Ecriture.ecrireStringln(file, "sub sp,2");
+	}
+
+	@Override
+	public void call(String nom) {
+		Ecriture.ecrireStringln(file, ";call " + nom);
+		Ecriture.ecrireStringln(file, "call " + nom);
+	}
 }
