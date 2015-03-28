@@ -69,4 +69,5 @@ public interface YVM {
 	public void reserveRetour();
 	
 	public void call(String nom);
+	public void prog();
 }

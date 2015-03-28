@@ -31,6 +31,10 @@ public class Yaka {
 	public static int nbSi;
 	public static int lastSi;
 	
+	public static String lastIdent;
+	public static boolean appel;
+	public static String lastFonc;
+	
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
     	nbFaire=1;
@@ -161,7 +165,7 @@ void analyse() : {}
     expression = new Expression(yvm);
      yvm.entete();}
      (declFonction())*
-     <PRINCIPAL>
+     <PRINCIPAL> {yvm.prog();}
    bloc()
    <FPRINCIPAL>
    <FPROGRAMME>   {yvm.queue();}
@@ -170,7 +174,7 @@ void analyse() : {}
 void bloc() : {}{
  (declConst())*
  (declVar())*
- {yvm.ouvrePrinc(tabIdent.getNbVar());}		
+ {yvm.ouvreBloc(tabIdent.getNbVar());}		
   suiteInstr()
 }
 
@@ -196,10 +200,10 @@ void valConst() : {String clef = YakaTokenManager.identLu;}
 
 void declVar() : {}
 {
-  <VAR> type(){int type = 0; if (dernierType == 1)  				{type = 1;}}
-  <ident>		{declaration.declVar(YakaTokenManager.identLu, type);}
+  <VAR> type()
+  <ident>		{declaration.declVar(YakaTokenManager.identLu, dernierType);}
   ("," 
-      <ident>  {declaration.declVar(YakaTokenManager.identLu, type);}
+      <ident>  {declaration.declVar(YakaTokenManager.identLu, dernierType);}
   )* ";"
 	
 }
@@ -214,26 +218,29 @@ void type() :{}
  */
 void declFonction() : {}
 {
-	type() <FONCTION> <ident> paramForms()
+	type() <FONCTION> <ident> {lastFonc=YakaTokenManager.identLu; yvm.etiquette(lastFonc); declaration.declFonction(lastFonc,dernierType);} paramForms() {tabIdent.initOffset();} 
+	bloc()
+	<FFONCTION> {yvm.fermeBloc(tabIdent.getNbParam()); tabIdent.getL().clear();}
 }
 
 void paramForms() : {}
 {
 	("("(paramForm() (","paramForm())*)?")")?
 }
+
 void paramForm()  : {}
 {
-	type() <ident>
+	type() {tabIdent.chercheFonction(lastFonc).addParam(dernierType);} <ident> {declaration.declParam(YakaTokenManager.identLu, dernierType);}
 }
 
 void retourne() : {}
 {
-	<RETOURNE> expression()
+	<RETOURNE> expression() {yvm.ireturn(2*(tabIdent.getNbParam()+2));}
 }
 
-void argumentsFonction() : {}
+void argumentsFonction() : {String id = YakaTokenManager.identLu;}
 {
-	"("(expression() (","expression())*)?")"
+	{yvm.reserveRetour();} "("(expression() (","expression())*)?")" {yvm.call(id);}
 }
 /*
  * Syntaxe des instructions.
@@ -267,7 +274,7 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() 
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction()
 	| <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 
 }
@@ -277,8 +284,9 @@ void iteration() : {int temp=nbFaire;}
  */
 void conditionnelle() : {int temp=nbSi;}
 {
-	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.Goto("FSI"+temp);yvm.etiquette("SINON"+temp);}
-	| <FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
+	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.Goto("FSI"+temp);} 
+		<SINON> {yvm.etiquette("SINON"+temp);} instruction()
+		<FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
 }
 
 
@@ -289,7 +297,7 @@ void expression() : {}
 {
   simpleExpr() 
   (opRel() 
-  simpleExpr() {expression.evaluation();} 
+  simpleExpr() {if(!appel) expression.evaluation();} 
   )?
 }
 
@@ -299,19 +307,19 @@ void simpleExpr() : {}
 {
    terme() 
    (opAdd() 
-   terme() {expression.evaluation();}
+   terme() {if(!appel) expression.evaluation();}
    )*  
 } 
 void terme() : {}
 {
   facteur() 
   (opMul() 
-  facteur() {expression.evaluation();}
+  facteur() {if(!appel) expression.evaluation();}
   )*
 }
 void facteur() : {}
 {   primaire()
-  |  opNeg() primaire() {expression.evaluationNeg();}
+  |  opNeg() primaire() {if(!appel)  expression.evaluationNeg();}
 }
 
 void primaire (): {}
@@ -321,9 +329,9 @@ void primaire (): {}
  
 }
 
-void valeur () : {}
+void valeur () : {String id = YakaTokenManager.identLu;}
 { <entier> 		{yvm.iconst(YakaTokenManager.entierLu); expression.empilerInt();}
- | <ident> ( argumentsFonction() )?		{expression.empilerIdent(YakaTokenManager.identLu);}
+ | <ident>  	{appel=false;} ( argumentsFonction() {appel=true;})?		{ if(!appel) expression.empilerIdent(id);}
  | <VRAI> 		{yvm.iconst(-1); expression.empilerBool();}
  | <FAUX> 		{yvm.iconst(0); expression.empilerBool();}
  

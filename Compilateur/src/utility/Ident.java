@@ -33,4 +33,8 @@ public abstract class Ident {
 	public boolean isConst() {
 		return false;
 	}
+	
+	public boolean isParam() {
+		return false;
+	}
 }

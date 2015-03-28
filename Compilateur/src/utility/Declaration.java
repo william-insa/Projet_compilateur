@@ -1,4 +1,5 @@
 package utility;
+
 import generated.*;
 
 
@@ -14,8 +15,6 @@ public class Declaration {
 	public void defConst(String clef, int type, int valeur) throws ParseException {
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setValeur(valeur);
 		((IdConst) Yaka.tabIdent.chercheIdent(clef)).setType(type);
-		
-		
 	}
 
 	public void defConst(String clef, String nom) throws ParseException {
@@ -28,5 +27,11 @@ public class Declaration {
 		Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,-2*(1+Yaka.tabIdent.getNbVar())));
 	}
 	
+	public void declParam(String clef, int type) {
+		Yaka.tabIdent.rangeIdent(clef, new IdParam(clef,type,0));
+	}
 	
+	public void declFonction(String nom, int _r) {
+		Yaka.tabIdent.rangeFonction(nom, new Fonction(_r));
+	}
 }

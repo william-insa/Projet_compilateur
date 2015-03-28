@@ -20,8 +20,7 @@ public class YVMasm implements YVM {
 	    Ecriture.ecrireStringln (file,".model SMALL");
 	    Ecriture.ecrireStringln (file,".586");
 	    Ecriture.ecrireStringln (file,".CODE");
-	    Ecriture.ecrireStringln (file,"debut : ");
-	    Ecriture.ecrireStringln (file,"STARTUPCODE");
+	   
     }
     
 	
@@ -245,15 +244,15 @@ public class YVMasm implements YVM {
 
 	@Override
 	public void ouvreBloc(int x) {
-		Ecriture.ecrireStringln(file, ";ouvBloc " + x);
-		Ecriture.ecrireStringln(file, "enter "+x+",0");
+		Ecriture.ecrireStringln(file, ";ouvBloc " + 2*x);
+		Ecriture.ecrireStringln(file, "enter "+2*x+",0");
 	}
 
 	@Override
 	public void fermeBloc(int x) {
-		Ecriture.ecrireStringln(file, ";fermeBloc " + x);
+		Ecriture.ecrireStringln(file, ";fermeBloc " + 2*x);
 		Ecriture.ecrireStringln(file, "leave");
-		Ecriture.ecrireStringln(file, "ret 4");
+		Ecriture.ecrireStringln(file, "ret " + 2*x);
 	}
 
 	@Override
@@ -273,5 +272,11 @@ public class YVMasm implements YVM {
 	public void call(String nom) {
 		Ecriture.ecrireStringln(file, ";call " + nom);
 		Ecriture.ecrireStringln(file, "call " + nom);
+	}
+	
+	public void prog() {
+		 Ecriture.ecrireStringln (file,"debut : ");
+		 Ecriture.ecrireStringln (file,"STARTUPCODE");
+		 Ecriture.ecrireStringln (file,"main:");
 	}
 }

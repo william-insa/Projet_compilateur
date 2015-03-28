@@ -2,6 +2,7 @@ package utility;
 
 import generated.*;
 
+import java.util.HashMap;
 import java.util.Stack;
 
 public class Expression {
@@ -19,17 +20,18 @@ public class Expression {
 	}
 	
 	public void empilerIdent (String _op) throws ParseException  {
-		if (Yaka.tabIdent.existeIdent(_op)) {
-			Ident ident = Yaka.tabIdent.chercheIdent(_op);
+		Ident ident = Yaka.tabIdent.chercheIdent(_op);
 			
-			pileOperande.add(ident.getType());
+		pileOperande.add(ident.getType());
 		
-			if (ident.isConst()) {
-				yvm.iconst(((IdConst) ident).getValeur());
-			}
-			else {
+		if (ident.isConst()) {
+			yvm.iconst(((IdConst) ident).getValeur());
+		}
+		else {
+			if(ident.isParam())
+				yvm.iload(((IdParam) ident).getOffset());
+			else
 				yvm.iload(((IdVar) ident).getOffset());
-			}
 		}
 	}
 	
