@@ -235,13 +235,14 @@ void paramForm()  : {}
 
 void retourne() : {}
 {
-	<RETOURNE> expression() {yvm.ireturn(2*(tabIdent.getNbParam()+2));}
+	<RETOURNE> expression() {expression.testRetour(tabIdent.chercheFonction(lastFonc).getRetour(),lastFonc); yvm.ireturn(2*(tabIdent.getNbParam()+2));}
 }
 
-void argumentsFonction() : {String id = YakaTokenManager.identLu;}
+void argumentsFonction() : {String id = YakaTokenManager.identLu; int nbP=0;}
 {
-	{yvm.reserveRetour();} "("(expression() (","expression())*)?")" {yvm.call(id);}
+	{yvm.reserveRetour();} "("(expression() {nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP); } (","expression() {nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP);})*)?")" {tabIdent.chercheFonction(id).testNbP(nbP,id); yvm.call(id);}
 }
+
 /*
  * Syntaxe des instructions.
  */
@@ -274,9 +275,7 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction()
-	| <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
-
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() (instruction())* <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 }
 
 /*
@@ -297,29 +296,29 @@ void expression() : {}
 {
   simpleExpr() 
   (opRel() 
-  simpleExpr() {if(!appel) expression.evaluation();} 
+  simpleExpr() {expression.evaluation();} 
   )?
 }
-
-
 
 void simpleExpr() : {}
 {
    terme() 
    (opAdd() 
-   terme() {if(!appel) expression.evaluation();}
+   terme() {expression.evaluation();}
    )*  
-} 
+}
+ 
 void terme() : {}
 {
   facteur() 
   (opMul() 
-  facteur() {if(!appel) expression.evaluation();}
+  facteur() {expression.evaluation();}
   )*
 }
+
 void facteur() : {}
 {   primaire()
-  |  opNeg() primaire() {if(!appel)  expression.evaluationNeg();}
+  |  opNeg() primaire() {expression.evaluationNeg();}
 }
 
 void primaire (): {}
@@ -331,7 +330,7 @@ void primaire (): {}
 
 void valeur () : {String id = YakaTokenManager.identLu;}
 { <entier> 		{yvm.iconst(YakaTokenManager.entierLu); expression.empilerInt();}
- | <ident>  	{appel=false;} ( argumentsFonction() {appel=true;})?		{ if(!appel) expression.empilerIdent(id);}
+ | <ident>  	{appel=false;} (argumentsFonction() {appel=true;} )?		{ if(appel) expression.empilerFonc(tabIdent.chercheFonction(id)); else expression.empilerIdent(id);}
  | <VRAI> 		{yvm.iconst(-1); expression.empilerBool();}
  | <FAUX> 		{yvm.iconst(0); expression.empilerBool();}
  

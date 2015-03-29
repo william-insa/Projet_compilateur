@@ -33,7 +33,7 @@ public class YVMasm implements YVM {
 	
 	public void iconst(int valeur){
 		Ecriture.ecrireStringln (file,";iconst " + valeur);	
-	    Ecriture.ecrireStringln (file,"push " + valeur);
+	    Ecriture.ecrireStringln (file,"push word ptr" + valeur);
 	}
 	
 	public void idiv(){
@@ -61,7 +61,10 @@ public class YVMasm implements YVM {
 	
 	public void iload (int x){
 		Ecriture.ecrireStringln (file,";iload "+x);	
-	    Ecriture.ecrireStringln (file,"push word ptr[bp" + x + "]");
+		if (x>0)
+			Ecriture.ecrireStringln (file,"push word ptr[bp+" + x + "]");
+		else
+			Ecriture.ecrireStringln (file,"push word ptr[bp" + x + "]");
 	}
 	
 	public void imul(){

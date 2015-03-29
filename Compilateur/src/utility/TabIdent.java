@@ -18,7 +18,7 @@ public class TabIdent {
 			return locaux.get(_clef);
 		}
 		
-		throw (new ParseException ("Erreur ident inconnue : "+_clef+" \n"));
+		throw (new ParseException ("Erreur ident inconnu : "+_clef+" \n"));
 		
 	}
 
@@ -45,7 +45,7 @@ public class TabIdent {
 			return globaux.get(_clef);
 		}
 		
-		throw (new ParseException ("Erreur ident inconnue : "+_clef+" \n"));
+		throw (new ParseException ("Erreur ident inconnu : "+_clef+" \n"));
 		
 	}
 	

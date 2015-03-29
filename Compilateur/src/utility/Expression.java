@@ -149,4 +149,19 @@ public class Expression {
 		if (pileOperande.pop()!=1)
 			System.out.println("La condition n'est pas de type booléen.");
 	}
+	
+	public void testRetour(int _t, String _id) {
+		if (pileOperande.pop() != _t)
+			System.out.println("La fonction "+_id+" ne retourne pas le bon type.");
+	}
+	
+	public void testTypeP(Fonction _f, int _r)
+	{
+		if (pileOperande.pop() != _f.getList().get(_r-1))
+			System.out.println("Type du parametre incorrect.");
+	}
+	
+	public void empilerFonc(Fonction _f) {
+		pileOperande.add(_f.getRetour());
+	}
 }
