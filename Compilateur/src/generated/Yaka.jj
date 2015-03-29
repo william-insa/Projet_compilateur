@@ -275,7 +275,7 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> instruction() (instruction())* <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> suiteInstr() <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 }
 
 /*
@@ -283,8 +283,8 @@ void iteration() : {int temp=nbFaire;}
  */
 void conditionnelle() : {int temp=nbSi;}
 {
-	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> instruction() {yvm.Goto("FSI"+temp);} 
-		<SINON> {yvm.etiquette("SINON"+temp);} instruction()
+	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> suiteInstr() {yvm.Goto("FSI"+temp);} 
+		<SINON> {yvm.etiquette("SINON"+temp);} suiteInstr()
 		<FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
 }
 
