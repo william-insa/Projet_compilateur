@@ -275,7 +275,9 @@ void ecriture() : {}
  */
 void iteration() : {int temp=nbFaire;}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} <FAIRE> suiteInstr() <FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
+	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} 
+	<FAIRE> suiteInstr()
+	<FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 }
 
 /*
@@ -283,9 +285,10 @@ void iteration() : {int temp=nbFaire;}
  */
 void conditionnelle() : {int temp=nbSi;}
 {
-	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+temp);} <ALORS> suiteInstr() {yvm.Goto("FSI"+temp);} 
-		<SINON> {yvm.etiquette("SINON"+temp);} suiteInstr()
-		<FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
+	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+lastSi);} 
+	<ALORS> suiteInstr() {yvm.Goto("FSI"+lastSi);} {yvm.etiquette("SINON"+lastSi);}
+	(<SINON> suiteInstr())?
+	<FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
 }
 
 
@@ -338,7 +341,7 @@ void valeur () : {String id = YakaTokenManager.identLu;}
 
 void opRel() : {}
 {
-   "=" {expression.empilerOP("=");}
+   "=" 		{expression.empilerOP("=");}
  | "<>" 	{expression.empilerOP("<>");}
  | "<" 		{expression.empilerOP("<");}
  | "<=" 	{expression.empilerOP("<=");}
@@ -349,7 +352,7 @@ void opRel() : {}
 void opAdd() : {}
 {
     "+"		{expression.empilerOP("+");}
-  |  "-"  {expression.empilerOP("-");}
+  |  "-"  	{expression.empilerOP("-");}
   | <OU> 	{expression.empilerOP("OU");}
 }
 
