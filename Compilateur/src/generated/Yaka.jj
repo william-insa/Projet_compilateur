@@ -254,9 +254,11 @@ void instruction() : {}
 	affectation() | lecture() | ecriture() | iteration() | conditionnelle() | retourne()
 }
 
-void affectation() : {IdVar temp;}
+void affectation() : {Ident temp;}
 {
-	<ident> {temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {expression.aff(temp); yvm.istore(temp.getOffset());}
+	<ident> {temp=Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {expression.aff(temp); 
+		if (temp.isParam()) yvm.istore(((IdParam)temp).getOffset());
+		if (temp.isVar()) yvm.istore(((IdVar)temp).getOffset());}
 }
 
 void lecture() : {}
@@ -266,16 +268,17 @@ void lecture() : {}
 
 void ecriture() : {}
 {
-	<ECRIRE> "(" ( expression() {if(expression.ecr()==0) yvm.ecrireEnt(); else yvm.ecrireBool();} | <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
+	<ECRIRE> "(" ( expression() {if(expression.ecr()==0) yvm.ecrireEnt(); else yvm.ecrireBool();} 
+	| <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
 	| <ALALIGNE> {yvm.aLaLigne();}
 }
 
 /*
  * Itération
  */
-void iteration() : {int temp=nbFaire;}
+void iteration() : {}
 {
-	<TANTQUE> {yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;}  expression() {expression.cond(); yvm.iffaux("FAIT"+temp);} 
+	<TANTQUE> {lastFaire=nbFaire;nbFaire++;yvm.etiquette("FAIRE"+lastFaire);}  expression() {expression.cond(); yvm.iffaux("FAIT"+lastFaire);} 
 	<FAIRE> suiteInstr()
 	<FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
 }
@@ -283,7 +286,7 @@ void iteration() : {int temp=nbFaire;}
 /*
  * Conditionnelle
  */
-void conditionnelle() : {int temp=nbSi;}
+void conditionnelle() : {}
 {
 	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+lastSi);} 
 	<ALORS> suiteInstr() {yvm.Goto("FSI"+lastSi);} {yvm.etiquette("SINON"+lastSi);}

@@ -2,7 +2,6 @@ package utility;
 
 import generated.*;
 
-import java.util.HashMap;
 import java.util.Stack;
 
 public class Expression {
@@ -20,6 +19,7 @@ public class Expression {
 	}
 	
 	public void empilerIdent (String _op) throws ParseException  {
+		
 		Ident ident = Yaka.tabIdent.chercheIdent(_op);
 			
 		pileOperande.add(ident.getType());
@@ -137,6 +137,7 @@ public class Expression {
 		int typeI = i.getType();
 		int typeE = pileOperande.pop();
 		
+		if (i.isConst()) System.out.println("On ne peut pas affecter une nouvelle valeur à une constante.");
 		if (typeI != typeE) System.out.println("Erreur d'affectation.");
 		
 	}
