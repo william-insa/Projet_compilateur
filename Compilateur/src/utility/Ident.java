@@ -14,33 +14,17 @@ public abstract class Ident {
 
 	//Ident _a et _b sont identique?
 	public boolean memeIdent(Ident _a, Ident _b) {
-
 		return _a.getName().equals(_b.getName());
 	}
 
-	
-	public String getName() {
-		return this.name;
-	}
-	public void setName(String _n) {
-		this.name = _n;
-	}
+	public String getName() {return this.name;}
+	public void setName(String _n) {this.name = _n;}
 
-	public int getType() {
-		return this.type;
-	}
-	public void setType(int _t) {
-		this.type = _t;
-	}
+	public int getType() {return this.type;}
+	public void setType(int _t) {this.type = _t;}
 
 	//Verificateur de type
-	public boolean isConst() {
-		return false;
-	}
-	public boolean isParam() {
-		return false;
-	}
-	public boolean isVar() {
-		return false;
-	}
+	public boolean isConst() {return false;}
+	public boolean isParam() {return false;}
+	public boolean isVar() {return false;}
 }

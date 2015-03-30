@@ -11,15 +11,9 @@ public class IdConst extends Ident {
 		this.valeur = _valeur;
 	}
 
-	public int getValeur() {
-		return this.valeur;
-	}
-	public void setValeur(int _v) {
-		this.valeur = _v;
-	}
+	public int getValeur() {return this.valeur;}
+	public void setValeur(int _v) {this.valeur = _v;}
 
 	//Verificateur de type
-	public boolean isConst() {
-		return true;
-	}
+	public boolean isConst() {return true;}
 }

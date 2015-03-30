@@ -12,12 +12,8 @@ public class IdParam extends Ident {
 		this.offset = _offset;
 	}
 
-	public int getOffset() {
-		return this.offset;
-	}
-	public void setOffset(int _o) {
-		this.offset = _o;
-	}
+	public int getOffset() {return this.offset;}
+	public void setOffset(int _o) {this.offset = _o;}
 	
 	//Verificateur de Type
 	public boolean isParam() { return true; }
