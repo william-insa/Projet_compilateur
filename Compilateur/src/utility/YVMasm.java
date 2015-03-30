@@ -16,7 +16,7 @@ public class YVMasm implements YVM {
     public void entete(){
 		
 	    Ecriture.ecrireStringln (file,";entete ");
-	    Ecriture.ecrireStringln (file,"extrn lirent:proc, ecrent:proc, ecrbool:poc, ecrch:proc, ligsuiv:proc");  
+	    Ecriture.ecrireStringln (file,"extrn lirent:proc, ecrent:proc, ecrbool:proc, ecrch:proc, ligsuiv:proc");  
 	    Ecriture.ecrireStringln (file,".model SMALL");
 	    Ecriture.ecrireStringln (file,".586");
 	    Ecriture.ecrireStringln (file,".CODE");
@@ -33,7 +33,7 @@ public class YVMasm implements YVM {
 	
 	public void iconst(int valeur){
 		Ecriture.ecrireStringln (file,";iconst " + valeur);	
-	    Ecriture.ecrireStringln (file,"push word ptr" + valeur);
+	    Ecriture.ecrireStringln (file,"push word ptr " + valeur);
 	}
 	
 	public void idiv(){
