@@ -15,6 +15,7 @@ public class Fonction {
 	
 	public int getNbP() { return this.param.size(); }
 	public int getRetour() { return this.resultat; }
+	
 	public ArrayList<Integer> getList() { return this.param; }
 	
 	public void testNbP(int _n, String id) {
