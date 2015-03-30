@@ -20,6 +20,7 @@ public class Fonction {
 	
 	public int getNbP() { return this.param.size(); }
 	public int getRetour() { return this.resultat; }
+	
 	public ArrayList<Integer> getList() { return this.param; }
 	
 	//Verification du nombre de param
