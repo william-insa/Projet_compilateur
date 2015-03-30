@@ -384,12 +384,14 @@ public class Yaka implements YakaConstants {
   }
 
   static final public void affectation() throws ParseException {
-                      IdVar temp;
+                      Ident temp;
     jj_consume_token(ident);
-                 temp=(IdVar) Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);
+                 temp=Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);
     jj_consume_token(42);
     expression();
-                                                                                                        expression.aff(temp); yvm.istore(temp.getOffset());
+                                                                                                expression.aff(temp);
+                if (temp.isParam()) yvm.istore(((IdParam)temp).getOffset());
+                if (temp.isVar()) yvm.istore(((IdVar)temp).getOffset());
   }
 
   static final public void lecture() throws ParseException {
@@ -418,7 +420,7 @@ public class Yaka implements YakaConstants {
         break;
       case chaine:
         jj_consume_token(chaine);
-                                                                                                                  yvm.ecrireChaine(YakaTokenManager.chaineLue);
+                    yvm.ecrireChaine(YakaTokenManager.chaineLue);
         break;
       default:
         jj_la1[16] = jj_gen;
@@ -442,11 +444,10 @@ public class Yaka implements YakaConstants {
  * Itération
  */
   static final public void iteration() throws ParseException {
-                    int temp=nbFaire;
     jj_consume_token(TANTQUE);
-                   yvm.etiquette("FAIRE"+temp);lastFaire=nbFaire;nbFaire++;
+                   lastFaire=nbFaire;nbFaire++;yvm.etiquette("FAIRE"+lastFaire);
     expression();
-                                                                                            expression.cond(); yvm.iffaux("FAIT"+temp);
+                                                                                                 expression.cond(); yvm.iffaux("FAIT"+lastFaire);
     jj_consume_token(FAIRE);
     suiteInstr();
     jj_consume_token(FAIT);
@@ -457,7 +458,6 @@ public class Yaka implements YakaConstants {
  * Conditionnelle
  */
   static final public void conditionnelle() throws ParseException {
-                         int temp=nbSi;
     jj_consume_token(SI);
               lastSi=nbSi;nbSi++;
     expression();
