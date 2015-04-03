@@ -54,7 +54,7 @@ public class Expression {
 	public boolean comparaisonTous(String ope) { return ope.equals("=") || ope.equals("<>"); }
 	public boolean testBool(String ope) { return ope.equals("OU") || ope.equals("ET"); }
 	public boolean testOpNegBool(String ope) { return ope.equals("NON"); }
-	public boolean testOpNegInt(String ope) { return ope.equals("-"); }
+	public boolean testOpNegInt(String ope) { return ope.equals("NEG"); }
 	
 	// Test si une opération est bon en fonction du type et de l'opérateur
 	public boolean estBon(int type, String ope) {
@@ -112,6 +112,10 @@ public class Expression {
 				yvm.iadd();break;
 			case "-":
 				yvm.isub();break;
+			case "<>":
+				yvm.idiff();break;
+			case "=":
+				yvm.iegal();break;
 		}
 	}
 	
@@ -137,7 +141,7 @@ public class Expression {
 		case "NON":
 			yvm.inot();
 			break;
-		case "-":
+		case "NEG":
 			yvm.ineg();
 			break;
 		}
@@ -171,7 +175,8 @@ public class Expression {
 	// Vérifie que le type d'un paramètre est correct
 	public void testTypeP(Fonction _f, int _r)
 	{
-		if (pileOperande.pop() != _f.getList().get(_r-1))
+		int type = pileOperande.pop();
+		if ((_r)<=_f.getList().size() && type != _f.getList().get(_r-1))
 			System.out.println("Type du parametre incorrect.");
 	}
 	

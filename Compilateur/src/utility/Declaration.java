@@ -9,7 +9,10 @@ public class Declaration {
 	
 	//declaration d'une constante
 	public void declConst(String clef){
-		Yaka.tabIdent.rangeIdent(clef, new IdConst(clef,0,0));
+		if (Yaka.tabIdent.existeIdent(clef))
+			System.out.println(clef+" déjà définie");
+		else
+			Yaka.tabIdent.rangeIdent(clef, new IdConst(clef,0,0));
 	}
 
 	//Definition d'une constante (mise a jour du type et de la valeur)
@@ -27,7 +30,10 @@ public class Declaration {
 	
 	//Declaration d'une Var (avec son type)
 	public void declVar(String clef, int type) {
-		Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,-2*(1+Yaka.tabIdent.getNbVar())));
+		if (Yaka.tabIdent.existeIdent(clef))
+			System.out.println(clef+" déjà définie");
+		else
+			Yaka.tabIdent.rangeIdent(clef, new IdVar(clef,type,-2*(1+Yaka.tabIdent.getNbVar())));
 	}
 	
 	//Declaration d'un Param (avec son type)

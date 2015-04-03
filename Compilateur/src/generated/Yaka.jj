@@ -26,19 +26,19 @@ public class Yaka {
 	
 	public static int dernierType;
 	public static int nbFaire;
-	public static int lastFaire;
-	
 	public static int nbSi;
-	public static int lastSi;
 	
 	public static String lastIdent;
 	public static boolean appel;
 	public static String lastFonc;
+
+	public static boolean main;
 	
 	public Yaka ()	{		declaration = new Declaration();
     	tabIdent = new TabIdent();
     	nbFaire=1;
     	nbSi=1;
+    	main = false;
 	}
 	
   public static void main(String args[]) {
@@ -165,7 +165,7 @@ void analyse() : {}
     expression = new Expression(yvm);
      yvm.entete();}
      (declFonction())*
-     <PRINCIPAL> {yvm.prog();}
+     <PRINCIPAL> {main=true; yvm.prog();}
    bloc()
    <FPRINCIPAL>
    <FPROGRAMME>   {yvm.queue();}
@@ -218,9 +218,17 @@ void type() :{}
  */
 void declFonction() : {}
 {
-	type() <FONCTION> <ident> {lastFonc=YakaTokenManager.identLu; yvm.etiquette(lastFonc); declaration.declFonction(lastFonc,dernierType);} paramForms() {tabIdent.initOffset();} 
+	type() <FONCTION> <ident>
+		{
+		  lastFonc=YakaTokenManager.identLu;
+		  yvm.etiquette(lastFonc);
+		  declaration.declFonction(lastFonc,dernierType);
+		}
+		paramForms()
+		{tabIdent.chercheFonction(lastFonc).initOffset(tabIdent);} 
 	bloc()
-	<FFONCTION> {yvm.fermeBloc(tabIdent.getNbParam()); tabIdent.getL().clear();}
+	<FFONCTION>
+		{yvm.fermeBloc(tabIdent.getNbParam()); tabIdent.getL().clear();}
 }
 
 void paramForms() : {}
@@ -230,17 +238,36 @@ void paramForms() : {}
 
 void paramForm()  : {}
 {
-	type() {tabIdent.chercheFonction(lastFonc).addParam(dernierType);} <ident> {declaration.declParam(YakaTokenManager.identLu, dernierType);}
+	type() <ident>
+		{
+	  	tabIdent.chercheFonction(lastFonc).addParam(dernierType,YakaTokenManager.identLu);
+		declaration.declParam(YakaTokenManager.identLu, dernierType);
+		}
 }
 
 void retourne() : {}
 {
-	<RETOURNE> expression() {expression.testRetour(tabIdent.chercheFonction(lastFonc).getRetour(),lastFonc); yvm.ireturn(2*(tabIdent.getNbParam()+2));}
+	<RETOURNE> expression()
+		{
+		  if(main)
+		  	System.out.println("Pas de retourne dans le main autorisé");
+		  else
+		  {
+		    expression.testRetour(tabIdent.chercheFonction(lastFonc).getRetour(),lastFonc);
+		    yvm.ireturn(2*(tabIdent.getNbParam()+2));
+		  }
+		}
 }
 
 void argumentsFonction() : {String id = YakaTokenManager.identLu; int nbP=0;}
 {
-	{yvm.reserveRetour();} "("(expression() {nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP); } (","expression() {nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP);})*)?")" {tabIdent.chercheFonction(id).testNbP(nbP,id); yvm.call(id);}
+		{yvm.reserveRetour();}
+	"("(expression()
+		{nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP); }
+	(","expression()
+		{nbP++; expression.testTypeP(tabIdent.chercheFonction(id),nbP);}
+	)*)?")"
+		{tabIdent.chercheFonction(id).testNbP(nbP,id); yvm.call(id);}
 }
 
 /*
@@ -256,9 +283,13 @@ void instruction() : {}
 
 void affectation() : {Ident temp;}
 {
-	<ident> {temp=Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression() {expression.aff(temp); 
-		if (temp.isParam()) yvm.istore(((IdParam)temp).getOffset());
-		if (temp.isVar()) yvm.istore(((IdVar)temp).getOffset());}
+	<ident> {temp=Yaka.tabIdent.chercheIdent(YakaTokenManager.identLu);} "="  expression()
+		{expression.aff(temp); 
+			if (temp.isParam())
+				yvm.istore(((IdParam)temp).getOffset());
+			if (temp.isVar())
+				yvm.istore(((IdVar)temp).getOffset());
+		}
 }
 
 void lecture() : {}
@@ -269,29 +300,30 @@ void lecture() : {}
 void ecriture() : {}
 {
 	<ECRIRE> "(" ( expression() {if(expression.ecr()==0) yvm.ecrireEnt(); else yvm.ecrireBool();} 
-	| <chaine> {yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
-	| <ALALIGNE> {yvm.aLaLigne();}
+	| <chaine> 					{yvm.ecrireChaine(YakaTokenManager.chaineLue);} ) ")"
+	| <ALALIGNE> 				{yvm.aLaLigne();}
 }
 
 /*
  * Itération
  */
-void iteration() : {}
+void iteration() : {int faire=nbFaire;}
 {
-	<TANTQUE> {lastFaire=nbFaire;nbFaire++;yvm.etiquette("FAIRE"+lastFaire);}  expression() {expression.cond(); yvm.iffaux("FAIT"+lastFaire);} 
+	<TANTQUE> {nbFaire++;yvm.etiquette("FAIRE"+faire);}  expression()
+		{expression.cond(); yvm.iffaux("FAIT"+faire);} 
 	<FAIRE> suiteInstr()
-	<FAIT> {yvm.Goto("FAIRE"+lastFaire); yvm.etiquette("FAIT"+lastFaire);lastFaire--;}
+	<FAIT> {yvm.Goto("FAIRE"+faire); yvm.etiquette("FAIT"+faire);}
 }
 
 /*
  * Conditionnelle
  */
-void conditionnelle() : {}
+void conditionnelle() : {int si=nbSi;}
 {
-	<SI> {lastSi=nbSi;nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+lastSi);} 
-	<ALORS> suiteInstr() {yvm.Goto("FSI"+lastSi);} {yvm.etiquette("SINON"+lastSi);}
+	<SI> {nbSi++;} expression() {expression.cond(); yvm.iffaux("SINON"+si);} 
+	<ALORS> suiteInstr() {yvm.Goto("FSI"+si);} {yvm.etiquette("SINON"+si);}
 	(<SINON> suiteInstr())?
-	<FSI> {yvm.etiquette("FSI"+lastSi);lastSi--;}
+	<FSI> {yvm.etiquette("FSI"+si);}
 }
 
 
@@ -336,7 +368,12 @@ void primaire (): {}
 
 void valeur () : {String id = YakaTokenManager.identLu;}
 { <entier> 		{yvm.iconst(YakaTokenManager.entierLu); expression.empilerInt();}
- | <ident>  	{appel=false;} (argumentsFonction() {appel=true;} )?		{ if(appel) expression.empilerFonc(tabIdent.chercheFonction(id)); else expression.empilerIdent(id);}
+ | <ident>  	{appel=false;} (argumentsFonction() {appel=true;} )?
+ 	{
+ 	  if(appel)
+ 	  	expression.empilerFonc(tabIdent.chercheFonction(id));
+ 	  else expression.empilerIdent(id);
+ 	}
  | <VRAI> 		{yvm.iconst(-1); expression.empilerBool();}
  | <FAUX> 		{yvm.iconst(0); expression.empilerBool();}
  

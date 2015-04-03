@@ -67,18 +67,7 @@ public class TabIdent {
 		return i;
 	}
 	
-	//init les offset de tout les Param
-	public void initOffset() {
-		int nbParam = getNbParam();
-		int i=1;
-		for(Ident id : locaux.values()) {
-			if (id.isParam())
-			{
-				((IdParam) id).setOffset(nbParam*2+4-i*2);
-				i++;
-			}
-		}
-	}
+
 	
 	public HashMap<String,Fonction> getG() { return this.globaux; }
 	public HashMap<String,Ident> getL() { return this.locaux; }
