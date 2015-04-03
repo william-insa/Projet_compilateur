@@ -54,7 +54,7 @@ public class Expression {
 	public boolean comparaisonTous(String ope) { return ope.equals("=") || ope.equals("<>"); }
 	public boolean testBool(String ope) { return ope.equals("OU") || ope.equals("ET"); }
 	public boolean testOpNegBool(String ope) { return ope.equals("NON"); }
-	public boolean testOpNegInt(String ope) { return ope.equals("-"); }
+	public boolean testOpNegInt(String ope) { return ope.equals("NEG"); }
 	
 	// Test si une opération est bon en fonction du type et de l'opérateur
 	public boolean estBon(int type, String ope) {
